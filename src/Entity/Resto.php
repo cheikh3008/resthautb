@@ -2,15 +2,17 @@
 
 namespace App\Entity;
 
-use ApiPlatform\Core\Annotation\ApiResource;
-use App\Repository\RestoRepository;
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use App\Repository\RestoRepository;
+use Doctrine\Common\Collections\Collection;
+use ApiPlatform\Core\Annotation\ApiProperty;
+use ApiPlatform\Core\Annotation\ApiResource;
+use Doctrine\Common\Collections\ArrayCollection;
 
 /**
  * @ApiResource()
  * @ORM\Entity(repositoryClass=RestoRepository::class)
+ * @ApiResource(iri="http://schema.org/Book")
  */
 class Resto
 {
@@ -28,6 +30,10 @@ class Resto
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @var MediaObject|null
+     * @ORM\ManyToOne(targetEntity=MediaObject::class)
+     * @ORM\JoinColumn(nullable=true)
+     * @ApiProperty(iri="http://schema.org/image")
      */
     private $image;
 
@@ -35,11 +41,6 @@ class Resto
      * @ORM\Column(type="text")
      */
     private $description;
-
-    /**
-     * @ORM\Column(type="integer")
-     */
-    private $telephone;
 
     /**
      * @ORM\Column(type="string", length=255)
@@ -98,18 +99,6 @@ class Resto
     public function setDescription(string $description): self
     {
         $this->description = $description;
-
-        return $this;
-    }
-
-    public function getTelephone(): ?int
-    {
-        return $this->telephone;
-    }
-
-    public function setTelephone(int $telephone): self
-    {
-        $this->telephone = $telephone;
 
         return $this;
     }

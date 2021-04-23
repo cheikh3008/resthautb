@@ -1,0 +1,7 @@
+vich_uploader:
+    db_driver: orm
+
+    mappings:
+        resto:
+            uri_prefix: /images/restos
+            upload_destination: '%kernel.project_dir%/public/images/restos'
