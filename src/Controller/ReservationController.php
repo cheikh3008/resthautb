@@ -35,6 +35,13 @@ class ReservationController extends AbstractController
         $reservation = new Reservation();
         $role = $roleRepository->findOneBy(array('libelle' => 'ROLE_CLIENT'));
         $resto = $restoRepository->findOneBy(array('id' => $values->resto));
+        if ($resto == null) {
+            $data = [
+                'status' => 500,
+                'message' => 'ce resto n\'existe pas . '];
+    
+            return new JsonResponse($data, 500);
+        }
         $user->setEmail($values->email)
             ->setPassword($passwordEncode->encodePassword($user, $values->password))
             ->setRole($role)
