@@ -5,3 +5,6 @@ vich_uploader:
         resto:
             uri_prefix: /images/restos
             upload_destination: '%kernel.project_dir%/public/images/restos'
+        plat:
+            uri_prefix: /images/plats
+            upload_destination: '%kernel.project_dir%/public/images/plats'

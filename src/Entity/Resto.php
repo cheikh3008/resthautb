@@ -2,7 +2,9 @@
 
 namespace App\Entity;
 
+use App\Entity\Reservation;
 use Doctrine\ORM\Mapping as ORM;
+use App\Controller\RestoController;
 use App\Repository\RestoRepository;
 use Doctrine\Common\Collections\Collection;
 use ApiPlatform\Core\Annotation\ApiProperty;
@@ -10,7 +12,14 @@ use ApiPlatform\Core\Annotation\ApiResource;
 use Doctrine\Common\Collections\ArrayCollection;
 
 /**
- * @ApiResource()
+ * @ApiResource(
+ *   collectionOperations={
+ *     "get"={"method"="GET"},
+ *     "post"={"method"="POST", "controller"=RestoController::class}
+ *      
+ *  },
+ *     itemOperations={"get"={"method"="GET"}, "put"={"method"="PUT"}, "delete"={"method"="DELETE"}}
+ * )
  * @ORM\Entity(repositoryClass=RestoRepository::class)
  * @ApiResource(iri="http://schema.org/Book")
  */
@@ -57,9 +66,21 @@ class Resto
      */
     private $plat;
 
+    /**
+     * @ORM\OneToMany(targetEntity=Reservation::class, mappedBy="resto")
+     */
+    private $reservation;
+
+    /**
+     * @ORM\OneToMany(targetEntity=Commande::class, mappedBy="resto")
+     */
+    private $commande;
+
     public function __construct()
     {
         $this->plat = new ArrayCollection();
+        $this->commande = new ArrayCollection();
+        $this->reservation = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -156,4 +177,66 @@ class Resto
 
         return $this;
     }
+
+    /**
+     * @return Collection|Reservation[]
+     */
+    public function getReservation(): Collection
+    {
+        return $this->reservation;
+    }
+
+    public function addReservation(Reservation $reservation): self
+    {
+        if (!$this->reservation->contains($reservation)) {
+            $this->reservation[] = $reservation;
+            $reservation->setResto($this);
+        }
+
+        return $this;
+    }
+
+    public function removeReservation(Reservation $reservation): self
+    {
+        if ($this->reservation->removeElement($reservation)) {
+            // set the owning side to null (unless already changed)
+            if ($reservation->getResto() === $this) {
+                $reservation->setResto(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Commande[]
+     */
+    public function getCommande(): Collection
+    {
+        return $this->commande;
+    }
+
+    public function addCommande(Commande $commande): self
+    {
+        if (!$this->commande->contains($commande)) {
+            $this->commande[] = $commande;
+            $commande->setResto($this);
+        }
+
+        return $this;
+    }
+
+    public function removeCommande(Commande $commande): self
+    {
+        if ($this->commande->removeElement($commande)) {
+            // set the owning side to null (unless already changed)
+            if ($commande->getResto() === $this) {
+                $commande->setResto(null);
+            }
+        }
+
+        return $this;
+    }
+
+
 }

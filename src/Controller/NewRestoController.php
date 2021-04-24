@@ -66,10 +66,10 @@ class NewRestoController extends AbstractController
             $manager->persist($resto);
             $manager->flush();
             $data = [
-                'status' => 200,
+                'status' => 201,
                 'message' => 'Nouveau resto creer avec succes. '];
     
-            return new JsonResponse($data, 200);
+            return new JsonResponse($data, 201);
        }
        
     }
