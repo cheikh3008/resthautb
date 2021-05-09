@@ -2,12 +2,27 @@
 
 namespace App\Entity;
 
-use ApiPlatform\Core\Annotation\ApiResource;
-use App\Repository\PlatRepository;
 use Doctrine\ORM\Mapping as ORM;
+use App\Controller\PlatController;
+use App\Repository\PlatRepository;
+use ApiPlatform\Core\Annotation\ApiResource;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
- * @ApiResource()
+ * @ApiResource(
+ * collectionOperations={
+ *   "get" = {
+ *      "normalization_context"={"groups"={"plat_read"}}    
+ *  },
+ *      "post" = {}
+ * },
+ *     itemOperations={
+ *  "get" = {
+ *      "normalization_context"={"groups"={"plat_read_details"}}    
+ *  }
+ * , "put", "delete"},
+ *   
+ * )
  * @ORM\Entity(repositoryClass=PlatRepository::class)
  */
 class Plat
@@ -16,26 +31,30 @@ class Plat
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
+     * @Groups({"menu_read", "menu_read_details", "plat_read_details", "plat_read"})
      */
     private $id;
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Groups({"menu_read", "menu_read_details", "plat_read_details", "plat_read"})
      */
     private $nomPlat;
 
     /**
-     * @ORM\Column(type="string", length=255)
+     * @ORM\Column(type="blob")
      */
     private $image;
 
     /**
      * @ORM\Column(type="text")
+     * @Groups({"menu_read", "menu_read_details", "plat_read_details", "plat_read"})
      */
     private $description;
 
     /**
      * @ORM\Column(type="float")
+     * @Groups({"menu_read", "menu_read_details", "plat_read_details", "plat_read"})
      */
     private $prix;
 
@@ -47,6 +66,7 @@ class Plat
 
     /**
      * @ORM\ManyToOne(targetEntity=Menu::class, inversedBy="plat")
+     * Groups({plat_read_details", "plat_read"})
      */
     private $menu;
 
@@ -72,12 +92,12 @@ class Plat
         return $this;
     }
 
-    public function getImage(): ?string
+    public function getImage()
     {
         return $this->image;
     }
 
-    public function setImage(string $image): self
+    public function setImage($image): self
     {
         $this->image = $image;
 

@@ -10,15 +10,24 @@ use Doctrine\Common\Collections\Collection;
 use ApiPlatform\Core\Annotation\ApiProperty;
 use ApiPlatform\Core\Annotation\ApiResource;
 use Doctrine\Common\Collections\ArrayCollection;
+use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 /**
  * @ApiResource(
- *   collectionOperations={
- *     "get"={"method"="GET"},
- *     "post"={"method"="POST", "controller"=RestoController::class}
- *      
+ * collectionOperations={
+ *   "get" = {
+ *      "normalization_context"={"groups"={"resto_read"}}    
  *  },
- *     itemOperations={"get"={"method"="GET"}, "put"={"method"="PUT"}, "delete"={"method"="DELETE"}}
+ *      "post"
+ * },
+ *     itemOperations={
+ *  "get" = {
+ *      "normalization_context"={"groups"={"resto_read_details"}}    
+ *  }
+ * , "put", "delete"},
+ *   
  * )
  * @ORM\Entity(repositoryClass=RestoRepository::class)
  * @ApiResource(iri="http://schema.org/Book")
@@ -29,30 +38,26 @@ class Resto
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
+     * @Groups({"resto_read", "resto_read_details"})
      */
     private $id;
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Groups({"resto_read", "resto_read_details"})
+     * @Assert\NotBlank()
      */
     private $nomResto;
 
     /**
-     * @ORM\Column(type="string", length=255)
-     * @var MediaObject|null
-     * @ORM\ManyToOne(targetEntity=MediaObject::class)
-     * @ORM\JoinColumn(nullable=true)
-     * @ApiProperty(iri="http://schema.org/image")
-     */
-    private $image;
-
-    /**
      * @ORM\Column(type="text")
+     * @Groups({"resto_read", "resto_read_details"})
      */
     private $description;
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Groups({"resto_read", "resto_read_details"})
      */
     private $adresse;
 
@@ -76,6 +81,11 @@ class Resto
      */
     private $commande;
 
+    /**
+     * @ORM\Column(type="blob")
+     */
+    private $image;
+
     public function __construct()
     {
         $this->plat = new ArrayCollection();
@@ -96,18 +106,6 @@ class Resto
     public function setNomResto(string $nomResto): self
     {
         $this->nomResto = $nomResto;
-
-        return $this;
-    }
-
-    public function getImage(): ?string
-    {
-        return $this->image;
-    }
-
-    public function setImage(string $image): self
-    {
-        $this->image = $image;
 
         return $this;
     }
@@ -238,5 +236,17 @@ class Resto
         return $this;
     }
 
+    public function getImage()
+    {
+        return $this->image;
+    }
+
+    public function setImage($image): self
+    {
+        $this->image = $image;
+
+        return $this;
+    }
+    
 
 }

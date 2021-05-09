@@ -35,7 +35,12 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
         $this->_em->persist($user);
         $this->_em->flush();
     }
-
+    public function findDepotByPartenaire($id)
+    {
+        return $this->getEntityManager()
+                ->createQuery('SELECT D.id, C.numCompte , D.montant, D.createdAt FROM App\Entity\Depot D,App\Entity\Compte C, App\Entity\Partenaire P WHERE C.id = D.compte AND P.id = C.partenaire AND P.id = '.$id
+        )->getResult();
+    }
     // /**
     //  * @return User[] Returns an array of User objects
     //  */
