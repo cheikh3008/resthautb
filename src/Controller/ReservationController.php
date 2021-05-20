@@ -42,8 +42,7 @@ class ReservationController extends AbstractController
     
             return new JsonResponse($data, 500);
         }
-        $user->setEmail($values->email)
-            ->setPassword($passwordEncode->encodePassword($user, $values->password))
+        $user->setPassword($passwordEncode->encodePassword($user, $values->password))
             ->setRole($role)
             ->setUsername($values->username)
             ->setNomComplet($values->nomComplet)

@@ -18,16 +18,17 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
  * @ApiResource(
  * collectionOperations={
  *   "get" = {
- *      "normalization_context"={"groups"={"resto_read"}}    
+ *         
  *  },
  *      "post"
  * },
  *     itemOperations={
- *  "get" = {
- *      "normalization_context"={"groups"={"resto_read_details"}}    
- *  }
- * , "put", "delete"},
- *   
+ *      "get" = {
+ *             
+ *      },
+ *      "put", 
+ *      "delete"},
+ *      normalizationContext={"groups"={"resto:read"}},
  * )
  * @ORM\Entity(repositoryClass=RestoRepository::class)
  * @ApiResource(iri="http://schema.org/Book")
@@ -38,36 +39,38 @@ class Resto
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
-     * @Groups({"resto_read", "resto_read_details"})
+     * @Groups({"resto:read"})
      */
     private $id;
 
     /**
      * @ORM\Column(type="string", length=255)
-     * @Groups({"resto_read", "resto_read_details"})
+     * @Groups({"resto:read"})
      * @Assert\NotBlank()
      */
     private $nomResto;
 
     /**
      * @ORM\Column(type="text")
-     * @Groups({"resto_read", "resto_read_details"})
+     * @Groups({"resto:read"})
      */
     private $description;
 
     /**
      * @ORM\Column(type="string", length=255)
-     * @Groups({"resto_read", "resto_read_details"})
+     * @Groups({"resto:read"})
      */
     private $adresse;
 
     /**
      * @ORM\ManyToOne(targetEntity=User::class, inversedBy="resto")
-     */
+     * @Groups({"resto:read"})
+    */
     private $user;
 
     /**
      * @ORM\OneToMany(targetEntity=Plat::class, mappedBy="resto")
+     * @Groups({"resto:read"})
      */
     private $plat;
 
@@ -83,6 +86,7 @@ class Resto
 
     /**
      * @ORM\Column(type="blob")
+     * @Groups({"resto:read"})
      */
     private $image;
 

@@ -93,4 +93,18 @@ class RestoController extends AbstractController
         ]);
 
     }
+    /**
+     * @Route("/api/resto/list/{id}", name="details_resto", methods={"GET"})
+     */
+    public function details(RestoRepository $restoRepository, $id ,SerializerInterface $serializer): Response
+    {
+        $data = $restoRepository->find($id);
+        $images = [];
+        $data->setImage((base64_encode(stream_get_contents($data->getImage()))));
+        $images = $serializer->serialize($data, 'json');
+        return new Response($images, 200, [
+            'Content-Type' => 'application/json'
+        ]);
+
+    }
 }

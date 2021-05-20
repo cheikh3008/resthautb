@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\Plat;
 use App\Repository\MenuRepository;
 use App\Repository\PlatRepository;
+use App\Repository\UserRepository;
 use App\Repository\RestoRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -70,12 +71,14 @@ class PlatController extends AbstractController
     /**
      * @Route("/api/plat/list", name="list_plat", methods={"GET"})
      */
-    public function index(PlatRepository $platRepository, SerializerInterface $serializer): Response
+    public function index(PlatRepository $platRepository ,RestoRepository $restoRepository ,SerializerInterface $serializer): Response
     {
-        $data = $platRepository->findAll();
+        $userConnecte = $this->tokenStorage->getToken()->getUser();
+        $userId = $restoRepository->findUserById($userConnecte->getId());
+        $data = $platRepository->findBy(array("resto"=> $userId["0"]));
         $dataTable = [];
         foreach ($data as $entity) {
-           // $images[$key] = base64_encode(stream_get_contents($entity->getImage()));
+            // $images[$key] = base64_encode(stream_get_contents($entity->getImage()));
             $entity->setImage((base64_encode(stream_get_contents($entity->getImage()))));
         }
         

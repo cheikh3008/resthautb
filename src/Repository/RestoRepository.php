@@ -18,7 +18,7 @@ class RestoRepository extends ServiceEntityRepository
     {
         parent::__construct($registry, Resto::class);
     }
-    public function findRestoById($id)
+    public function findUserById($id)
     {
         return $this->getEntityManager()
             ->createQuery('SELECT R FROM App\Entity\User U, 
@@ -26,6 +26,15 @@ class RestoRepository extends ServiceEntityRepository
             WHERE U.id = R.user  AND U.id = '.$id
         )->getResult();
     }
+    public function findRestoById($id)
+    {
+        return $this->getEntityManager()
+            ->createQuery('SELECT R.id, R.nomResto, R.description, R.adresse, R.image, U.telephone, U.username FROM App\Entity\User U, 
+            App\Entity\Resto R
+            WHERE U.id = R.user  AND R.id = '.$id
+        )->getSingleResult();
+    }
+    
     // public function findRestoById($id)
     // {
     //     $em = $this->getEntityManager();
