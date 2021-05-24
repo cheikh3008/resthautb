@@ -12,15 +12,16 @@ use Symfony\Component\Serializer\Annotation\Groups;
  * @ApiResource(
  * collectionOperations={
  *   "get" = {
- *      "normalization_context"={"groups"={"plat_read"}}    
+ *         
  *  },
  *      "post" = {}
  * },
  *     itemOperations={
  *  "get" = {
- *      "normalization_context"={"groups"={"plat_read_details"}}    
+ *          
  *  }
  * , "put", "delete"},
+ * normalizationContext={"groups"={"plat:read"}},
  *   
  * )
  * @ORM\Entity(repositoryClass=PlatRepository::class)
@@ -31,30 +32,25 @@ class Plat
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
-     * @Groups({"menu_read", "menu_read_details", "plat_read_details", "plat_read"})
+     * @Groups({"plat:read" , "menu:read" , "resto:read"})
      */
     private $id;
 
     /**
      * @ORM\Column(type="string", length=255)
-     * @Groups({"menu_read", "menu_read_details", "plat_read_details", "plat_read"})
+     * @Groups({"plat:read" , "menu:read" , "resto:read"})
      */
     private $nomPlat;
 
     /**
-     * @ORM\Column(type="blob")
-     */
-    private $image;
-
-    /**
      * @ORM\Column(type="text")
-     * @Groups({"menu_read", "menu_read_details", "plat_read_details", "plat_read"})
+     * @Groups({"plat:read" , "menu:read" , "resto:read"})
      */
     private $description;
 
     /**
      * @ORM\Column(type="float")
-     * @Groups({"menu_read", "menu_read_details", "plat_read_details", "plat_read"})
+     * @Groups({"plat:read" , "menu:read" , "resto:read"})
      */
     private $prix;
 
@@ -66,7 +62,7 @@ class Plat
 
     /**
      * @ORM\ManyToOne(targetEntity=Menu::class, inversedBy="plat")
-     * Groups({plat_read_details", "plat_read"})
+     * @Groups({"resto:read" , "plat:read"})
      */
     private $menu;
 
@@ -92,18 +88,7 @@ class Plat
         return $this;
     }
 
-    public function getImage()
-    {
-        return $this->image;
-    }
-
-    public function setImage($image): self
-    {
-        $this->image = $image;
-
-        return $this;
-    }
-
+    
     public function getDescription(): ?string
     {
         return $this->description;

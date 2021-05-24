@@ -10,20 +10,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
- * @ApiResource(
- * collectionOperations={
- *   "get" = {
- *      "normalization_context"={"groups"={"menu_read"}}    
- *  },
- *      "post"
- * },
- *     itemOperations={
- *  "get" = {
- *      "normalization_context"={"groups"={"menu_read_details"}}    
- *  }
- * , "put", "delete"},
- *   
- * )
+ * @ApiResource()
  * @ORM\Entity(repositoryClass=MenuRepository::class)
  */
 class Menu
@@ -32,21 +19,23 @@ class Menu
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
-     * @Groups({"menu_read", "menu_read_details"})
      */
     private $id;
 
     /**
      * @ORM\Column(type="string", length=255)
-     * @Groups({"menu_read", "menu_read_details"})
      */
     private $categorie;
 
     /**
      * @ORM\OneToMany(targetEntity=Plat::class, mappedBy="menu")
-     * @Groups({"menu_read", "menu_read_details"})
      */
     private $plat;
+
+    /**
+     * @ORM\Column(type="blob")
+     */
+    private $image;
 
     public function __construct()
     {
@@ -96,6 +85,18 @@ class Menu
                 $plat->setMenu(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getImage()
+    {
+        return $this->image;
+    }
+
+    public function setImage($image): self
+    {
+        $this->image = $image;
 
         return $this;
     }

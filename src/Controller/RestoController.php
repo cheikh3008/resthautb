@@ -83,10 +83,9 @@ class RestoController extends AbstractController
         $data = $restoRepository->findAll();
         $images = [];
         foreach ($data as $entity) {
-           // $images[$key] = base64_encode(stream_get_contents($entity->getImage()));
+           //$images[$key] = base64_encode(stream_get_contents($entity->getImage()));
             $entity->setImage((base64_encode(stream_get_contents($entity->getImage()))));
         }
-        
         $images = $serializer->serialize($data, 'json');
         return new Response($images, 200, [
             'Content-Type' => 'application/json'

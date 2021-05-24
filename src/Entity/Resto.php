@@ -70,7 +70,6 @@ class Resto
 
     /**
      * @ORM\OneToMany(targetEntity=Plat::class, mappedBy="resto")
-     * @Groups({"resto:read"})
      */
     private $plat;
 

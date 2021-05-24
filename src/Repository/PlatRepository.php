@@ -2,9 +2,11 @@
 
 namespace App\Repository;
 
+use App\Entity\Menu;
 use App\Entity\Plat;
-use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use App\Entity\Resto;
 use Doctrine\Persistence\ManagerRegistry;
+use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 
 /**
  * @method Plat|null find($id, $lockMode = null, $lockVersion = null)
@@ -18,7 +20,16 @@ class PlatRepository extends ServiceEntityRepository
     {
         parent::__construct($registry, Plat::class);
     }
-
+    public function findRestoById($id)
+    {
+        return $this->getEntityManager()
+            ->createQuery(
+                'SELECT M.id, M.categorie, M.image, P.id, P.nomPlat, P.description, P.prix FROM App\Entity\Menu M, 
+            App\Entity\Plat P, App\Entity\Resto R
+            WHERE R.id = P.resto AND M.id = P.menu AND R.id = ' . $id
+            )->getArrayResult();
+    }
+    
     // /**
     //  * @return Plat[] Returns an array of Plat objects
     //  */

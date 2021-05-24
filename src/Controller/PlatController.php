@@ -37,29 +37,22 @@ class PlatController extends AbstractController
      */
     public function add(RestoRepository $restoRepository, MenuRepository $menuRepository , Request $request, EntityManagerInterface $manager) 
     {
-        header('Content-Type: application/json; charset=utf-8');
-        header("Access-Control-Allow-Methods:  POST");
+        $values = json_decode($request->getContent());
         $userConect = $this->tokenStorage->getToken()->getUser();
         $userId = $userConect->getId();
-        $resto = $restoRepository->findRestoById($userId);
+        $resto = $restoRepository->findUserById($userId);
+        $menu = $menuRepository->findOneBy(array("id" => $values->menu));
+        //dd($values);
         $plat= new Plat();
-        $nomPlat = $request->request->all()["nomPlat"];
-        $description = $request->request->all()["description"];
-        $prix = $request->request->all()["prix"];
-        $menu = $request->request->all()["menu"];
-        $m = $menuRepository->findOneBy(array("id" => $menu));
-        $image = $request->files->get("image");
-        $image = fopen($image->getRealPath(),"rb");
+        
         $plat->setResto($resto["0"])
-            ->setNomPlat($nomPlat)
-            ->setDescription($description)
-            ->setPrix($prix)
-            ->setImage($image)
+            ->setNomPlat($values->nomPlat)
+            ->setDescription($values->description)
+            ->setPrix($values->prix)
             ->setUser($userConect)
-            ->setMenu($m);
+            ->setMenu($menu);
         $manager->persist($plat);
         $manager->flush();
-        fclose($image);
         $data = [
 
             'status' => 201,
@@ -71,11 +64,36 @@ class PlatController extends AbstractController
     /**
      * @Route("/api/plat/list", name="list_plat", methods={"GET"})
      */
-    public function index(PlatRepository $platRepository ,RestoRepository $restoRepository ,SerializerInterface $serializer): Response
+    public function listerPlatByUserId(PlatRepository $platRepository ,RestoRepository $restoRepository ,SerializerInterface $serializer): Response
     {
         $userConnecte = $this->tokenStorage->getToken()->getUser();
         $userId = $restoRepository->findUserById($userConnecte->getId());
-        $data = $platRepository->findBy(array("resto"=> $userId["0"]));
+        //dd($userId["0"]);
+        $data = $platRepository->findByEnvois($userId["0"]->getId());
+        dd($platRepository->findByEnvois($userId["0"]->getId()));
+        $dataTable = [];
+        dd($data);
+        foreach ($data as $key => $entity) {
+            
+            // $images[$key] = base64_encode(stream_get_contents($entity->getImage()));
+            $entity[$key] = ((base64_encode(stream_get_contents($entity["image"]))));
+            //$entity->setImage()((base64_encode(stream_get_contents($entity->getImage()))));
+        }
+        $dataTable = $serializer->serialize($data, 'json');
+        
+        return new Response($dataTable, 200, [
+            'Content-Type' => 'application/json'
+        ]);
+
+    }
+     /**
+     * @Route("/api/plat/list/{id}", name="list_plat_resto_id", methods={"GET"})
+     */
+    public function listerPlatByRestoId(PlatRepository $platRepository, $id,RestoRepository $restoRepository ,SerializerInterface $serializer): Response
+    {
+        $userConnecte = $this->tokenStorage->getToken()->getUser();
+        $userId = $restoRepository->findRestoById($id);
+        $data = $platRepository->findBy(array("resto"=> $userId));
         $dataTable = [];
         foreach ($data as $entity) {
             // $images[$key] = base64_encode(stream_get_contents($entity->getImage()));
