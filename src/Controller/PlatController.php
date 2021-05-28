@@ -37,22 +37,29 @@ class PlatController extends AbstractController
      */
     public function add(RestoRepository $restoRepository, MenuRepository $menuRepository , Request $request, EntityManagerInterface $manager) 
     {
-        $values = json_decode($request->getContent());
+        //$values = json_decode($request->getContent());
         $userConect = $this->tokenStorage->getToken()->getUser();
         $userId = $userConect->getId();
         $resto = $restoRepository->findUserById($userId);
-        $menu = $menuRepository->findOneBy(array("id" => $values->menu));
-        //dd($values);
         $plat= new Plat();
-        
+        $nomPlat = $request->request->all()["nomPlat"];
+        $description = $request->request->all()["description"];
+        $prix = $request->request->all()["prix"];
+        $menu = $request->request->all()["menu"];
+        $menuId = $menuRepository->findOneBy(array("id" => $menu));
+        //Add image de type blob
+        $image = $request->files->get("image");
+        $image = fopen($image->getRealPath(),"rb");
         $plat->setResto($resto["0"])
-            ->setNomPlat($values->nomPlat)
-            ->setDescription($values->description)
-            ->setPrix($values->prix)
+            ->setNomPlat($nomPlat)
+            ->setDescription($description)
+            ->setPrix($prix)
+            ->setImage($image)
             ->setUser($userConect)
-            ->setMenu($menu);
+            ->setMenu($menuId);
         $manager->persist($plat);
         $manager->flush();
+        fclose($image);
         $data = [
 
             'status' => 201,
@@ -64,23 +71,16 @@ class PlatController extends AbstractController
     /**
      * @Route("/api/plat/list", name="list_plat", methods={"GET"})
      */
-    public function listerPlatByUserId(PlatRepository $platRepository ,RestoRepository $restoRepository ,SerializerInterface $serializer): Response
+    public function listerPlatByUserId(PlatRepository $platRepository,MenuRepository $menuRepository ,RestoRepository $restoRepository ,SerializerInterface $serializer): Response
     {
         $userConnecte = $this->tokenStorage->getToken()->getUser();
         $userId = $restoRepository->findUserById($userConnecte->getId());
-        //dd($userId["0"]);
-        $data = $platRepository->findByEnvois($userId["0"]->getId());
-        dd($platRepository->findByEnvois($userId["0"]->getId()));
-        $dataTable = [];
-        dd($data);
-        foreach ($data as $key => $entity) {
-            
-            // $images[$key] = base64_encode(stream_get_contents($entity->getImage()));
-            $entity[$key] = ((base64_encode(stream_get_contents($entity["image"]))));
-            //$entity->setImage()((base64_encode(stream_get_contents($entity->getImage()))));
+        $data = $platRepository->findBy(["resto" => $userId["0"]]);
+        foreach ($data as $value) {
+            $value->setImage((base64_encode(stream_get_contents($value->getImage()))));
         }
         $dataTable = $serializer->serialize($data, 'json');
-        
+
         return new Response($dataTable, 200, [
             'Content-Type' => 'application/json'
         ]);
@@ -93,13 +93,11 @@ class PlatController extends AbstractController
     {
         $userConnecte = $this->tokenStorage->getToken()->getUser();
         $userId = $restoRepository->findRestoById($id);
-        $data = $platRepository->findBy(array("resto"=> $userId));
+        $data = $platRepository->findBy(["resto" => $userId]);
         $dataTable = [];
-        foreach ($data as $entity) {
-            // $images[$key] = base64_encode(stream_get_contents($entity->getImage()));
-            $entity->setImage((base64_encode(stream_get_contents($entity->getImage()))));
+        foreach ($data as $value) {
+            $value->setImage((base64_encode(stream_get_contents($value->getImage()))));
         }
-        
         $dataTable = $serializer->serialize($data, 'json');
         return new Response($dataTable, 200, [
             'Content-Type' => 'application/json'

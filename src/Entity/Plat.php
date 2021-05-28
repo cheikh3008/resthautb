@@ -32,25 +32,25 @@ class Plat
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
-     * @Groups({"plat:read" , "menu:read" , "resto:read"})
+     * @Groups({"plat:read", "menu:read" , "resto:read"})
      */
     private $id;
 
     /**
      * @ORM\Column(type="string", length=255)
-     * @Groups({"plat:read" , "menu:read" , "resto:read"})
+     * @Groups({"plat:read", "menu:read" })
      */
     private $nomPlat;
 
     /**
      * @ORM\Column(type="text")
-     * @Groups({"plat:read" , "menu:read" , "resto:read"})
+     * @Groups({"plat:read", "menu:read" })
      */
     private $description;
 
     /**
      * @ORM\Column(type="float")
-     * @Groups({"plat:read" , "menu:read" , "resto:read"})
+     * @Groups({"plat:read", "menu:read" })
      */
     private $prix;
 
@@ -62,7 +62,7 @@ class Plat
 
     /**
      * @ORM\ManyToOne(targetEntity=Menu::class, inversedBy="plat")
-     * @Groups({"resto:read" , "plat:read"})
+     * @ORM\JoinColumn(nullable=false)
      */
     private $menu;
 
@@ -70,6 +70,12 @@ class Plat
      * @ORM\ManyToOne(targetEntity=Resto::class, inversedBy="plat")
      */
     private $resto;
+
+    /**
+     * @ORM\Column(type="blob")
+     * @Groups({"plat:read" })
+     */
+    private $image;
 
     public function getId(): ?int
     {
@@ -145,6 +151,18 @@ class Plat
     public function setResto(?Resto $resto): self
     {
         $this->resto = $resto;
+
+        return $this;
+    }
+
+    public function getImage()
+    {
+        return $this->image;
+    }
+
+    public function setImage($image): self
+    {
+        $this->image = $image;
 
         return $this;
     }

@@ -70,6 +70,7 @@ class Resto
 
     /**
      * @ORM\OneToMany(targetEntity=Plat::class, mappedBy="resto")
+     * 
      */
     private $plat;
 

@@ -20,16 +20,25 @@ class PlatRepository extends ServiceEntityRepository
     {
         parent::__construct($registry, Plat::class);
     }
-    public function findRestoById($id)
+    public function findPlatByRestoId($id)
     {
         return $this->getEntityManager()
             ->createQuery(
-                'SELECT M.id, M.categorie, M.image, P.id, P.nomPlat, P.description, P.prix FROM App\Entity\Menu M, 
+                'SELECT M.id, M.categorie, P.id, P.nomPlat, P.description, P.prix FROM App\Entity\Menu M, 
             App\Entity\Plat P, App\Entity\Resto R
             WHERE R.id = P.resto AND M.id = P.menu AND R.id = ' . $id
-            )->getArrayResult();
+            )->getResult();
     }
     
+    public function findPlatByMenuByresto($resto, $menu)
+    {
+        $em = $this->getEntityManager();
+        $query = $em->createQuery('SELECT DISTINCT P.id, P.nomPlat, P.prix FROM  App\Entity\Menu M, 
+        App\Entity\Plat P, App\Entity\Resto R WHERE P.id = R.resto AND M.id = P.menu AND R.id = :id AND M.categorie :menu');
+        $query->setParameter('resto', $resto);
+        $query->setParameter('menu', $menu);
+        return $query->getResult();
+    }
     // /**
     //  * @return Plat[] Returns an array of Plat objects
     //  */
