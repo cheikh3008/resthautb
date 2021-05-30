@@ -78,16 +78,6 @@ class User implements UserInterface
 
 
     /**
-     * @ORM\OneToMany(targetEntity=Table::class, mappedBy="user")
-     */
-    private $tables;
-
-    /**
-     * @ORM\OneToMany(targetEntity=Reservation::class, mappedBy="user")
-     */
-    private $reservation;
-
-    /**
      * @ORM\OneToMany(targetEntity=Commande::class, mappedBy="user")
      */
     private $commande;
@@ -98,8 +88,6 @@ class User implements UserInterface
         $this->plat = new ArrayCollection();
         $this->createdAt = new \DateTime("now");
         $this->updatedAt = new \DateTime("now");
-        $this->tables = new ArrayCollection();
-        $this->reservation = new ArrayCollection();
         $this->commande = new ArrayCollection();
     }
 
@@ -291,65 +279,7 @@ class User implements UserInterface
     }
 
 
-    /**
-     * @return Collection|Table[]
-     */
-    public function getTables(): Collection
-    {
-        return $this->tables;
-    }
-
-    public function addTable(Table $table): self
-    {
-        if (!$this->tables->contains($table)) {
-            $this->tables[] = $table;
-            $table->setUser($this);
-        }
-
-        return $this;
-    }
-
-    public function removeTable(Table $table): self
-    {
-        if ($this->tables->removeElement($table)) {
-            // set the owning side to null (unless already changed)
-            if ($table->getUser() === $this) {
-                $table->setUser(null);
-            }
-        }
-
-        return $this;
-    }
-
-    /**
-     * @return Collection|Reservation[]
-     */
-    public function getReservation(): Collection
-    {
-        return $this->reservation;
-    }
-
-    public function addReservation(Reservation $reservation): self
-    {
-        if (!$this->reservation->contains($reservation)) {
-            $this->reservation[] = $reservation;
-            $reservation->setUser($this);
-        }
-
-        return $this;
-    }
-
-    public function removeReservation(Reservation $reservation): self
-    {
-        if ($this->reservation->removeElement($reservation)) {
-            // set the owning side to null (unless already changed)
-            if ($reservation->getUser() === $this) {
-                $reservation->setUser(null);
-            }
-        }
-
-        return $this;
-    }
+    
 
     /**
      * @return Collection|Commande[]
