@@ -83,6 +83,11 @@ class Plat
      */
     private $quantite;
 
+    public function __construct()
+    {
+        $this->quantite = 1;
+    }
+
     public function getId(): ?int
     {
         return $this->id;
