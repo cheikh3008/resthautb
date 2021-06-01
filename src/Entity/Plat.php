@@ -77,6 +77,12 @@ class Plat
      */
     private $image;
 
+    /**
+     * @ORM\Column(type="integer", nullable=true)
+     * @Groups({"plat:read", "menu:read" , "resto:read"})
+     */
+    private $quantite;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -163,6 +169,18 @@ class Plat
     public function setImage($image): self
     {
         $this->image = $image;
+
+        return $this;
+    }
+
+    public function getQuantite(): ?int
+    {
+        return $this->quantite;
+    }
+
+    public function setQuantite(?int $quantite): self
+    {
+        $this->quantite = $quantite;
 
         return $this;
     }

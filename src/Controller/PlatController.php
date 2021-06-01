@@ -92,7 +92,7 @@ class PlatController extends AbstractController
     public function listerPlatByRestoId(PlatRepository $platRepository, $id,RestoRepository $restoRepository ,SerializerInterface $serializer): Response
     {
         $userConnecte = $this->tokenStorage->getToken()->getUser();
-        $userId = $restoRepository->findRestoById($id);
+        $userId = $restoRepository->find($id);
         $data = $platRepository->findBy(["resto" => $userId]);
         $dataTable = [];
         foreach ($data as $value) {
