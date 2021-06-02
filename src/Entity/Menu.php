@@ -32,12 +32,22 @@ class Menu
     private $categorie;
 
     /**
-     * @ORM\OneToMany(targetEntity=Plat::class, mappedBy="menu")
-     * @Groups({"menu:read" })
+     * @ORM\ManyToOne(targetEntity=User::class, inversedBy="menu")
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $user;
+
+    /**
+     * @ORM\ManyToOne(targetEntity=Resto::class, inversedBy="menu")
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $resto;
+
+    /**
+     * @ORM\ManyToMany(targetEntity=Plat::class, inversedBy="menus")
      */
     private $plat;
-
-   
+  
 
     public function __construct()
     {
@@ -61,6 +71,30 @@ class Menu
         return $this;
     }
 
+    public function getUser(): ?User
+    {
+        return $this->user;
+    }
+
+    public function setUser(?User $user): self
+    {
+        $this->user = $user;
+
+        return $this;
+    }
+
+    public function getResto(): ?Resto
+    {
+        return $this->resto;
+    }
+
+    public function setResto(?Resto $resto): self
+    {
+        $this->resto = $resto;
+
+        return $this;
+    }
+
     /**
      * @return Collection|Plat[]
      */
@@ -73,7 +107,6 @@ class Menu
     {
         if (!$this->plat->contains($plat)) {
             $this->plat[] = $plat;
-            $plat->setMenu($this);
         }
 
         return $this;
@@ -81,15 +114,10 @@ class Menu
 
     public function removePlat(Plat $plat): self
     {
-        if ($this->plat->removeElement($plat)) {
-            // set the owning side to null (unless already changed)
-            if ($plat->getMenu() === $this) {
-                $plat->setMenu(null);
-            }
-        }
+        $this->plat->removeElement($plat);
 
         return $this;
     }
 
-    
+        
 }

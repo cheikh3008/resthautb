@@ -2,6 +2,8 @@
 
 namespace App\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use App\Controller\PlatController;
 use App\Repository\PlatRepository;
@@ -60,16 +62,6 @@ class Plat
      */
     private $user;
 
-    /**
-     * @ORM\ManyToOne(targetEntity=Menu::class, inversedBy="plat")
-     * @ORM\JoinColumn(nullable=false)
-     */
-    private $menu;
-
-    /**
-     * @ORM\ManyToOne(targetEntity=Resto::class, inversedBy="plat")
-     */
-    private $resto;
 
     /**
      * @ORM\Column(type="blob")
@@ -83,9 +75,21 @@ class Plat
      */
     private $quantite;
 
+    /**
+     * @ORM\ManyToMany(targetEntity=Menu::class, mappedBy="plat")
+     */
+    private $menus;
+
+    /**
+     * @ORM\OneToMany(targetEntity=Commande::class, mappedBy="plat", orphanRemoval=true)
+     */
+    private $commande;
+
     public function __construct()
     {
         $this->quantite = 1;
+        $this->menus = new ArrayCollection();
+        $this->commande = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -142,29 +146,7 @@ class Plat
         return $this;
     }
 
-    public function getMenu(): ?Menu
-    {
-        return $this->menu;
-    }
-
-    public function setMenu(?Menu $menu): self
-    {
-        $this->menu = $menu;
-
-        return $this;
-    }
-
-    public function getResto(): ?Resto
-    {
-        return $this->resto;
-    }
-
-    public function setResto(?Resto $resto): self
-    {
-        $this->resto = $resto;
-
-        return $this;
-    }
+    
 
     public function getImage()
     {
@@ -186,6 +168,63 @@ class Plat
     public function setQuantite(?int $quantite): self
     {
         $this->quantite = $quantite;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Menu[]
+     */
+    public function getMenus(): Collection
+    {
+        return $this->menus;
+    }
+
+    public function addMenu(Menu $menu): self
+    {
+        if (!$this->menus->contains($menu)) {
+            $this->menus[] = $menu;
+            $menu->addPlat($this);
+        }
+
+        return $this;
+    }
+
+    public function removeMenu(Menu $menu): self
+    {
+        if ($this->menus->removeElement($menu)) {
+            $menu->removePlat($this);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Commande[]
+     */
+    public function getCommande(): Collection
+    {
+        return $this->commande;
+    }
+
+    public function addCommande(Commande $commande): self
+    {
+        if (!$this->commande->contains($commande)) {
+            $this->commande[] = $commande;
+            $commande->setPlat($this);
+        }
+
+        return $this;
+    }
+
+    public function removeCommande(Commande $commande): self
+    {
+        if ($this->commande->removeElement($commande)) {
+            // set the owning side to null (unless already changed)
+            if ($commande->getPlat() === $this) {
+                $commande->setPlat(null);
+            }
+        }
 
         return $this;
     }

@@ -34,15 +34,17 @@ class Commande
      */
     private $createdAt;
 
-    /**
-     * @ORM\ManyToOne(targetEntity=Resto::class, inversedBy="commande")
-     */
-    private $resto;
-
+    
     /**
      * @ORM\ManyToOne(targetEntity=User::class, inversedBy="commande")
      */
     private $user;
+
+    /**
+     * @ORM\ManyToOne(targetEntity=Plat::class, inversedBy="commande")
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $plat;
 
     public function getId(): ?int
     {
@@ -105,6 +107,18 @@ class Commande
     public function setUser(?User $user): self
     {
         $this->user = $user;
+
+        return $this;
+    }
+
+    public function getPlat(): ?Plat
+    {
+        return $this->plat;
+    }
+
+    public function setPlat(?Plat $plat): self
+    {
+        $this->plat = $plat;
 
         return $this;
     }

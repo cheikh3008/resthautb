@@ -37,12 +37,6 @@ class Reservation
     private $updatedAt;
 
     /**
-     * @ORM\ManyToOne(targetEntity=Resto::class, inversedBy="reservation")
-     */
-    private $resto;
-
-    
-    /**
      * @ORM\Column(type="string", length=255)
      * @Groups({"reservation:read"})
      */
@@ -66,9 +60,21 @@ class Reservation
      */
     private $heure;
 
+    /**
+     * @ORM\ManyToOne(targetEntity=User::class, inversedBy="reservation")
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $user;
+
+    /**
+     * @ORM\ManyToMany(targetEntity=Tables::class, mappedBy="reservation")
+     */
+    private $tables;
+
     public function __construct()
     {
         $this->updatedAt = new \DateTime("now");
+        $this->tables = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -99,21 +105,7 @@ class Reservation
 
         return $this;
     }
-
-
-    public function getResto(): ?Resto
-    {
-        return $this->resto;
-    }
-
-    public function setResto(?Resto $resto): self
-    {
-        $this->resto = $resto;
-
-        return $this;
-    }
-
-    
+   
 
     public function getNbPersonne(): ?string
     {
@@ -160,6 +152,45 @@ class Reservation
     public function setHeure(\DateTimeInterface $heure): self
     {
         $this->heure = $heure;
+
+        return $this;
+    }
+
+    public function getUser(): ?User
+    {
+        return $this->user;
+    }
+
+    public function setUser(?User $user): self
+    {
+        $this->user = $user;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Tables[]
+     */
+    public function getTables(): Collection
+    {
+        return $this->tables;
+    }
+
+    public function addTable(Tables $table): self
+    {
+        if (!$this->tables->contains($table)) {
+            $this->tables[] = $table;
+            $table->addReservation($this);
+        }
+
+        return $this;
+    }
+
+    public function removeTable(Tables $table): self
+    {
+        if ($this->tables->removeElement($table)) {
+            $table->removeReservation($this);
+        }
 
         return $this;
     }

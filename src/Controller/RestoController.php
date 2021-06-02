@@ -22,7 +22,7 @@ class RestoController extends AbstractController
     /**
      * @Route("/api/resto/add", name="add_resto", methods={"POST"})
      */
-    public function add(Request $request, USerRepository $userRepository ,EntityManagerInterface $manager,  UserPasswordEncoderInterface $passwordEncode,RoleRepository $roleRepository)
+    public function add(Request $request, UserRepository $userRepository ,EntityManagerInterface $manager,  UserPasswordEncoderInterface $passwordEncode,RoleRepository $roleRepository)
     {
         header('Content-Type: application/json; charset=utf-8');
         header("Access-Control-Allow-Methods:  POST");

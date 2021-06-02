@@ -82,6 +82,21 @@ class User implements UserInterface
      */
     private $commande;
 
+    /**
+     * @ORM\OneToMany(targetEntity=Tables::class, mappedBy="user")
+     */
+    private $tables;
+
+    /**
+     * @ORM\OneToMany(targetEntity=Menu::class, mappedBy="user")
+     */
+    private $menu;
+
+    /**
+     * @ORM\OneToMany(targetEntity=Reservation::class, mappedBy="user", orphanRemoval=true)
+     */
+    private $reservation;
+
     public function __construct()
     {
         $this->resto = new ArrayCollection();
@@ -89,6 +104,9 @@ class User implements UserInterface
         $this->createdAt = new \DateTime("now");
         $this->updatedAt = new \DateTime("now");
         $this->commande = new ArrayCollection();
+        $this->tables = new ArrayCollection();
+        $this->menu = new ArrayCollection();
+        $this->reservation = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -305,6 +323,96 @@ class User implements UserInterface
             // set the owning side to null (unless already changed)
             if ($commande->getUser() === $this) {
                 $commande->setUser(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Tables[]
+     */
+    public function getTables(): Collection
+    {
+        return $this->tables;
+    }
+
+    public function addTable(Tables $table): self
+    {
+        if (!$this->tables->contains($table)) {
+            $this->tables[] = $table;
+            $table->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeTable(Tables $table): self
+    {
+        if ($this->tables->removeElement($table)) {
+            // set the owning side to null (unless already changed)
+            if ($table->getUser() === $this) {
+                $table->setUser(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Menu[]
+     */
+    public function getMenu(): Collection
+    {
+        return $this->menu;
+    }
+
+    public function addMenu(Menu $menu): self
+    {
+        if (!$this->menu->contains($menu)) {
+            $this->menu[] = $menu;
+            $menu->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeMenu(Menu $menu): self
+    {
+        if ($this->menu->removeElement($menu)) {
+            // set the owning side to null (unless already changed)
+            if ($menu->getUser() === $this) {
+                $menu->setUser(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Reservation[]
+     */
+    public function getReservation(): Collection
+    {
+        return $this->reservation;
+    }
+
+    public function addReservation(Reservation $reservation): self
+    {
+        if (!$this->reservation->contains($reservation)) {
+            $this->reservation[] = $reservation;
+            $reservation->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeReservation(Reservation $reservation): self
+    {
+        if ($this->reservation->removeElement($reservation)) {
+            // set the owning side to null (unless already changed)
+            if ($reservation->getUser() === $this) {
+                $reservation->setUser(null);
             }
         }
 

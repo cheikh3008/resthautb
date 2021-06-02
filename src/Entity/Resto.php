@@ -69,12 +69,6 @@ class Resto
     private $user;
 
     /**
-     * @ORM\OneToMany(targetEntity=Plat::class, mappedBy="resto")
-     * 
-     */
-    private $plat;
-
-    /**
      * @ORM\OneToMany(targetEntity=Reservation::class, mappedBy="resto")
      */
     private $reservation;
@@ -90,11 +84,22 @@ class Resto
      */
     private $image;
 
+    /**
+     * @ORM\OneToMany(targetEntity=Tables::class, mappedBy="resto", orphanRemoval=true)
+     */
+    private $tables;
+
+    /**
+     * @ORM\OneToMany(targetEntity=Menu::class, mappedBy="resto", orphanRemoval=true)
+     */
+    private $menu;
+
     public function __construct()
     {
-        $this->plat = new ArrayCollection();
         $this->commande = new ArrayCollection();
         $this->reservation = new ArrayCollection();
+        $this->tables = new ArrayCollection();
+        $this->menu = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -150,96 +155,6 @@ class Resto
         return $this;
     }
 
-    /**
-     * @return Collection|Plat[]
-     */
-    public function getPlat(): Collection
-    {
-        return $this->plat;
-    }
-
-    public function addPlat(Plat $plat): self
-    {
-        if (!$this->plat->contains($plat)) {
-            $this->plat[] = $plat;
-            $plat->setResto($this);
-        }
-
-        return $this;
-    }
-
-    public function removePlat(Plat $plat): self
-    {
-        if ($this->plat->removeElement($plat)) {
-            // set the owning side to null (unless already changed)
-            if ($plat->getResto() === $this) {
-                $plat->setResto(null);
-            }
-        }
-
-        return $this;
-    }
-
-    /**
-     * @return Collection|Reservation[]
-     */
-    public function getReservation(): Collection
-    {
-        return $this->reservation;
-    }
-
-    public function addReservation(Reservation $reservation): self
-    {
-        if (!$this->reservation->contains($reservation)) {
-            $this->reservation[] = $reservation;
-            $reservation->setResto($this);
-        }
-
-        return $this;
-    }
-
-    public function removeReservation(Reservation $reservation): self
-    {
-        if ($this->reservation->removeElement($reservation)) {
-            // set the owning side to null (unless already changed)
-            if ($reservation->getResto() === $this) {
-                $reservation->setResto(null);
-            }
-        }
-
-        return $this;
-    }
-
-    /**
-     * @return Collection|Commande[]
-     */
-    public function getCommande(): Collection
-    {
-        return $this->commande;
-    }
-
-    public function addCommande(Commande $commande): self
-    {
-        if (!$this->commande->contains($commande)) {
-            $this->commande[] = $commande;
-            $commande->setResto($this);
-        }
-
-        return $this;
-    }
-
-    public function removeCommande(Commande $commande): self
-    {
-        if ($this->commande->removeElement($commande)) {
-            // set the owning side to null (unless already changed)
-            if ($commande->getResto() === $this) {
-                $commande->setResto(null);
-            }
-        }
-
-        return $this;
-    }
-
     public function getImage()
     {
         return $this->image;
@@ -248,6 +163,66 @@ class Resto
     public function setImage($image): self
     {
         $this->image = $image;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Tables[]
+     */
+    public function getTables(): Collection
+    {
+        return $this->tables;
+    }
+
+    public function addTable(Tables $table): self
+    {
+        if (!$this->tables->contains($table)) {
+            $this->tables[] = $table;
+            $table->setResto($this);
+        }
+
+        return $this;
+    }
+
+    public function removeTable(Tables $table): self
+    {
+        if ($this->tables->removeElement($table)) {
+            // set the owning side to null (unless already changed)
+            if ($table->getResto() === $this) {
+                $table->setResto(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Menu[]
+     */
+    public function getMenu(): Collection
+    {
+        return $this->menu;
+    }
+
+    public function addMenu(Menu $menu): self
+    {
+        if (!$this->menu->contains($menu)) {
+            $this->menu[] = $menu;
+            $menu->setResto($this);
+        }
+
+        return $this;
+    }
+
+    public function removeMenu(Menu $menu): self
+    {
+        if ($this->menu->removeElement($menu)) {
+            // set the owning side to null (unless already changed)
+            if ($menu->getResto() === $this) {
+                $menu->setResto(null);
+            }
+        }
 
         return $this;
     }

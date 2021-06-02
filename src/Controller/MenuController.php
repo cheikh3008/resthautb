@@ -13,9 +13,15 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Serializer\SerializerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 class MenuController extends AbstractController
 {
+    private $tokenStorage;
+    public function __construct(TokenStorageInterface $tokenStorage)
+    {
+        $this->tokenStorage = $tokenStorage;
+    }
     // /**
     //  * @Route("/api/menu/add", name="add_menu", methods={"POST"})
     //  */
@@ -38,18 +44,21 @@ class MenuController extends AbstractController
 
     //     return new JsonResponse($data, 201);
     // }
-    // /**
-    //  * @Route("/api/menu/list", name="list_menu", methods={"GET"})
-    //  */
-    // public function listerPlatByUserId(MenuRepository $menuRepository  ,SerializerInterface $serializer): Response
-    // {
-    //     $data = $menuRepository->findAll();
-    //     $dataTable = [];
-    //     $dataTable = $serializer->serialize($data, 'json');
-    //     return new Response($dataTable, 200, [
-    //         'Content-Type' => 'application/json'
-    //     ]);
+    /**
+     * @Route("/api/menu/list", name="list_menu", methods={"GET"})
+     */
+    public function listerPlatByUserId(MenuRepository $menuRepository, RestoRepository $restoRepository, SerializerInterface $serializer): Response
+    {
+        $userConnecte = $this->tokenStorage->getToken()->getUser();
+        $userId = $restoRepository->findby(["user" => $userConnecte]);
+        dd($userConnecte);
+        $data = $menuRepository->findBy(["resto" => $userId["0"]]);
+        $dataTable = [];
+        $dataTable = $serializer->serialize($data, 'json');
+        return new Response($dataTable, 200, [
+            'Content-Type' => 'application/json'
+        ]);
 
-    // }
+    }
     
 }

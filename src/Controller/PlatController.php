@@ -50,13 +50,12 @@ class PlatController extends AbstractController
         //Add image de type blob
         $image = $request->files->get("image");
         $image = fopen($image->getRealPath(),"rb");
-        $plat->setResto($resto["0"])
-            ->setNomPlat($nomPlat)
+        $plat->setNomPlat($nomPlat)
             ->setDescription($description)
             ->setPrix($prix)
             ->setImage($image)
             ->setUser($userConect)
-            ->setMenu($menuId);
+            ->addMenu($menuId);
         $manager->persist($plat);
         $manager->flush();
         fclose($image);
