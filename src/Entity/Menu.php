@@ -21,13 +21,13 @@ class Menu
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
-     * @Groups({"menu:read", "plat:read"})
+     * @Groups({"menu:read", "plat:read", "resto:read"})
      */
     private $id;
 
     /**
      * @ORM\Column(type="string", length=255)
-     * @Groups({"menu:read", "plat:read"})
+     * @Groups({"menu:read", "plat:read", "resto:read"})
      */
     private $categorie;
 
@@ -45,8 +45,15 @@ class Menu
 
     /**
      * @ORM\ManyToMany(targetEntity=Plat::class, inversedBy="menus")
+     * @Groups({"menu:read"})
      */
     private $plat;
+
+    /**
+     * @ORM\Column(type="blob")
+     * @Groups({"menu:read", "plat:read", "resto:read"})
+     */
+    private $image;
   
 
     public function __construct()
@@ -115,6 +122,18 @@ class Menu
     public function removePlat(Plat $plat): self
     {
         $this->plat->removeElement($plat);
+
+        return $this;
+    }
+
+    public function getImage()
+    {
+        return $this->image;
+    }
+
+    public function setImage($image): self
+    {
+        $this->image = $image;
 
         return $this;
     }

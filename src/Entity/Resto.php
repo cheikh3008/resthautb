@@ -91,6 +91,7 @@ class Resto
 
     /**
      * @ORM\OneToMany(targetEntity=Menu::class, mappedBy="resto", orphanRemoval=true)
+     * @Groups({"resto:read"})
      */
     private $menu;
 

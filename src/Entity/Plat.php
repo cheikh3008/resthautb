@@ -62,13 +62,6 @@ class Plat
      */
     private $user;
 
-
-    /**
-     * @ORM\Column(type="blob")
-     * @Groups({"plat:read" })
-     */
-    private $image;
-
     /**
      * @ORM\Column(type="integer", nullable=true)
      * @Groups({"plat:read", "menu:read" , "resto:read"})
@@ -81,9 +74,11 @@ class Plat
     private $menus;
 
     /**
-     * @ORM\OneToMany(targetEntity=Commande::class, mappedBy="plat", orphanRemoval=true)
+     * @ORM\ManyToMany(targetEntity=Commande::class, inversedBy="plats")
      */
     private $commande;
+
+   
 
     public function __construct()
     {
@@ -146,19 +141,6 @@ class Plat
         return $this;
     }
 
-    
-
-    public function getImage()
-    {
-        return $this->image;
-    }
-
-    public function setImage($image): self
-    {
-        $this->image = $image;
-
-        return $this;
-    }
 
     public function getQuantite(): ?int
     {
@@ -211,7 +193,6 @@ class Plat
     {
         if (!$this->commande->contains($commande)) {
             $this->commande[] = $commande;
-            $commande->setPlat($this);
         }
 
         return $this;
@@ -219,13 +200,10 @@ class Plat
 
     public function removeCommande(Commande $commande): self
     {
-        if ($this->commande->removeElement($commande)) {
-            // set the owning side to null (unless already changed)
-            if ($commande->getPlat() === $this) {
-                $commande->setPlat(null);
-            }
-        }
+        $this->commande->removeElement($commande);
 
         return $this;
     }
+
+    
 }
