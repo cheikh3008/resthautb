@@ -3,8 +3,9 @@
 namespace App\Repository;
 
 use App\Entity\Tables;
-use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\QueryBuilder;
 use Doctrine\Persistence\ManagerRegistry;
+use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 
 /**
  * @method Tables|null find($id, $lockMode = null, $lockVersion = null)
@@ -18,7 +19,15 @@ class TablesRepository extends ServiceEntityRepository
     {
         parent::__construct($registry, Tables::class);
     }
-
+    public function findTablesByResto($id)
+    {
+        return $this->getEntityManager()
+            ->createQuery('SELECT T.id, T.numero, T.nbPersonne FROM App\Entity\Tables T, 
+            App\Entity\Resto R
+            WHERE T.resto = R.id  AND R.id = '.$id
+        )->getResult();
+    }
+    
     // /**
     //  * @return Tables[] Returns an array of Tables objects
     //  */

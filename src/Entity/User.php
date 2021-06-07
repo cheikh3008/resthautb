@@ -23,11 +23,13 @@ class User implements UserInterface
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
+     * @Groups({"resto:read", "reservation:read"})
      */
     private $id;
 
     /**
      * @ORM\Column(type="string", length=180, unique=true)
+     * @Groups({"resto:read", "reservation:read"})
      */
     private $username;
 
@@ -41,17 +43,19 @@ class User implements UserInterface
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Groups({"resto:read", "reservation:read"})
      */
     private $nomComplet;
 
     /**
      * @ORM\Column(type="integer")
-     * @Groups({"resto:read"})
+     * @Groups({"resto:read", "reservation:read"})
      */
     private $telephone;
 
     /**
      * @ORM\Column(type="datetime")
+     * 
      */
     private $createdAt;
 

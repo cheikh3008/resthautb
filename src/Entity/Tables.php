@@ -2,14 +2,19 @@
 
 namespace App\Entity;
 
-use ApiPlatform\Core\Annotation\ApiResource;
-use App\Repository\TablesRepository;
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\ORM\Mapping\JoinTable;
+use App\Repository\TablesRepository;
+use Doctrine\ORM\Mapping\JoinColumn;
+use Doctrine\Common\Collections\Collection;
+use ApiPlatform\Core\Annotation\ApiResource;
+use Doctrine\Common\Collections\ArrayCollection;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
- * @ApiResource()
+ * @ApiResource(
+ * normalizationContext={"groups"={"tables:read"}},
+ * )
  * @ORM\Entity(repositoryClass=TablesRepository::class)
  */
 class Tables
@@ -18,16 +23,19 @@ class Tables
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
+     * @Groups({"reservation:read", "tables:read", "resto:read"})
      */
     private $id;
 
     /**
      * @ORM\Column(type="integer")
+     * @Groups({"reservation:read", "tables:read", "resto:read"})
      */
     private $numero;
 
     /**
      * @ORM\Column(type="integer")
+     * @Groups({"reservation:read", "tables:read", "resto:read"})
      */
     private $nbPersonne;
 
@@ -45,6 +53,8 @@ class Tables
 
     /**
      * @ORM\ManyToMany(targetEntity=Reservation::class, inversedBy="tables")
+     * @JoinTable(name="tables_reservation")
+     * @Groups({"tables:read"})
      */
     private $reservation;
 

@@ -86,6 +86,7 @@ class Resto
 
     /**
      * @ORM\OneToMany(targetEntity=Tables::class, mappedBy="resto", orphanRemoval=true)
+     *  @Groups({"resto:read"})
      */
     private $tables;
 

@@ -15,7 +15,9 @@ class MenuEventSubscriber implements EventSubscriberInterface
     }
     public function onControllerEvent(ControllerEvent $event)
     {
-        if ($event->getRequest()->getMethod() === "GET" ) {
+        //dd($event->getRequest()->get('_controller'));
+        if ($event->getRequest()->getMethod() === "GET" 
+        ) {
          
             $data = $this->menuRepository->findAll();
             foreach ($data as $value) {

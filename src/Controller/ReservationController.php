@@ -3,9 +3,11 @@
 namespace App\Controller;
 
 use App\Entity\User;
+use App\Entity\Tables;
 use App\Entity\Reservation;
 use App\Repository\RoleRepository;
 use App\Repository\RestoRepository;
+use App\Repository\TablesRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use App\Repository\ReservationRepository;
 use Symfony\Component\HttpFoundation\Request;
@@ -26,27 +28,25 @@ class ReservationController extends AbstractController
         
     }
     /**
-     * @Route("/api/add/reservation/client", name="reservation")
+     * @Route("/api/add/reservation", name="reservation")
      */
-    public function addReservationByClient(Request $request, EntityManagerInterface $manager ,RoleRepository $roleRepository, RestoRepository $restoRepository): Response
+    public function addReservationByClient(Request $request,  SerializerInterface $serializer ,TablesRepository $tablesRepository ,EntityManagerInterface $manager ,RoleRepository $roleRepository, RestoRepository $restoRepository): Response
     {
         $values = json_decode($request->getContent());
         $reservation = new Reservation();
-        $role = $roleRepository->findOneBy(array('libelle' => 'ROLE_CLIENT'));
-        $resto = $restoRepository->findOneBy(array('id' => $values->resto));
-        if ($resto == null) {
-            $data = [
-                'status' => 500,
-                'message' => 'ce resto n\'existe pas . '];
-    
-            return new JsonResponse($data, 500);
-        }
-        $reservation->setNomComplet($values->nomComplet)
-                    ->setTelephone($values->telephone)
-                    ->setNbPersonne($values->nbPersonne)
-                    ->setCreatedAt(\DateTime::createFromFormat('Y-m-d', $values->createdAt))
+        $user = $this->tokenStorage->getToken()->getUser(); 
+        $table = $tablesRepository->findBy(["id" => $values->tables]);
+        // foreach ($table as  $value) {
+        //     # code...
+        //     $table = $serializer->deserialize($value, Tables::class, 'json');
+        // }
+        //dd($table);
+        $reservation->setCreatedAt(\DateTime::createFromFormat('Y-m-d', $values->createdAt))
                     ->setHeure(\DateTime::createFromFormat('H:m', $values->heure))
-                    ->setResto($resto);
+                    ->setUser($user);
+        foreach ($table as  $value) {
+            $reservation->addTable($value);
+        }
         $manager->persist($reservation);
         $manager->flush();
         $data = [
@@ -55,53 +55,35 @@ class ReservationController extends AbstractController
 
         return new JsonResponse($data, 201);
     }
-    /**
-     * @Route("/api/add/reservation/gerant", name="add_reservation_client")
-     */
-    public function addReservationByGerant(Request $request, RestoRepository $restoRepository ,EntityManagerInterface $manager)
-    {
-        $values = json_decode($request->getContent());
-        $reservation = new Reservation();
-        if ( $this->getUser() == null) {
-            $data = [
-                'status' => 500,
-                'message' => 'ce resto n\'existe pas . '];
     
-            return new JsonResponse($data, 500);
-        }
-        $userConnecte = $this->getUser();
-        $resto = $restoRepository->findBy(["user" => $userConnecte]);
-        $reservation->setNomComplet($values->nomComplet)
-                    ->setTelephone($values->telephone)
-                    ->setNbPersonne($values->nbPersonne)
-                    ->setCreatedAt(\DateTime::createFromFormat('Y-m-d', $values->createdAt))
-                    ->setHeure(\DateTime::createFromFormat('H:m', $values->heure))
-                    ->setResto($resto["0"]);
-        $manager->persist($reservation);
-        $manager->flush();
-        $data = [
-            'status' => 201,
-            'message' => 'Votre réservation a été bien enrégistré. '];
-
-        return new JsonResponse($data, 201);
-    }
-
     /**
-     * @Route("/api/list/reservation", name="add_reservation_gerant")
+     * @Route("/api/list/reservation", name="list_reserv")
      */
-    public function list(ReservationRepository $reservationRepository, SerializerInterface $serializer, RestoRepository $restoRepository)
+    public function list(ReservationRepository $reservationRepository, TablesRepository $tablesRepository ,SerializerInterface $serializer, RestoRepository $restoRepository)
     {
-        $userConnecte = $this->getUser();
+        $userConnecte = $this->tokenStorage->getToken()->getUser();
         $resto = $restoRepository->findBy(["user" => $userConnecte]);
-        $data = $reservationRepository->findBy(["resto" => $resto]);
-        foreach ($data as  $value) {
-           date_format( $value->getCreatedAt(), 'Y-m-d');
-           date_format( $value->getheure(), 'H:m');
+        $tables = $tablesRepository->findBy(["resto" => $resto["0"]]);
+        
+        $new_array = [];
+        foreach($tables as $key => $value) {
+            $new_array[] = $value->getReservation();
         }
-        $dataTable = $serializer->serialize($data, 'json');
+        if($tables){
+            
+            $dataTable = $serializer->serialize($new_array["0"], 'json');
 
-        return new Response($dataTable, 200, [
-            'Content-Type' => 'application/json'
-        ]);
+            return new Response($dataTable, 200, [
+                'Content-Type' => 'application/json'
+            ]);
+        } else {
+            $data = [
+
+                'status' => 204,
+                'message' => 'Pas de reservation. '
+            ];
+            return new JsonResponse($data, 204);
+        }
+       
     }
 }

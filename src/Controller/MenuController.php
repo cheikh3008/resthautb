@@ -58,6 +58,7 @@ class MenuController extends AbstractController
     {
         $userConnecte = $this->tokenStorage->getToken()->getUser();
         $userId = $restoRepository->findUserById($userConnecte->getId());
+        // dd($userId);
         $data = $menuRepository->findBy(["resto" => $userId["0"]]);
         $dataTable = [];
         $dataTable = $serializer->serialize($data, 'json');

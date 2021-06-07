@@ -21,13 +21,13 @@ class Reservation
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
-     * @Groups({"reservation:read"})
+     * @Groups({"reservation:read" , "tables:read"})
      */
     private $id;
 
     /**
      * @ORM\Column(type="datetime")
-     * @Groups({"reservation:read"})
+     * @Groups({"reservation:read" , "tables:read"})
      */
     private $createdAt;
 
@@ -36,38 +36,22 @@ class Reservation
      */
     private $updatedAt;
 
-    /**
-     * @ORM\Column(type="string", length=255)
-     * @Groups({"reservation:read"})
-     */
-    private $nbPersonne;
-
-    /**
-     * @ORM\Column(type="string", length=255)
-     * @Groups({"reservation:read"})
-     */
-    private $nomComplet;
-
-    /**
-     * @ORM\Column(type="string", length=255)
-     * @Groups({"reservation:read"})
-     */
-    private $telephone;
-
-    /**
+        /**
      * @ORM\Column(type="time")
-     * @Groups({"reservation:read"})
+     * @Groups({"reservation:read" , "tables:read"})
      */
     private $heure;
 
     /**
      * @ORM\ManyToOne(targetEntity=User::class, inversedBy="reservation")
      * @ORM\JoinColumn(nullable=false)
+     * @Groups({"reservation:read"})
      */
     private $user;
 
     /**
      * @ORM\ManyToMany(targetEntity=Tables::class, mappedBy="reservation")
+     * @Groups({"reservation:read"})
      */
     private $tables;
 
@@ -106,44 +90,6 @@ class Reservation
         return $this;
     }
    
-
-    public function getNbPersonne(): ?string
-    {
-        return $this->nbPersonne;
-    }
-
-    public function setNbPersonne(string $nbPersonne): self
-    {
-        $this->nbPersonne = $nbPersonne;
-
-        return $this;
-    }
-
-    public function getNomComplet(): ?string
-    {
-        return $this->nomComplet;
-    }
-
-    public function setNomComplet(string $nomComplet): self
-    {
-        $this->nomComplet = $nomComplet;
-
-        return $this;
-    }
-
-    
-    public function getTelephone(): ?string
-    {
-        return $this->telephone;
-    }
-
-    public function setTelephone(string $telephone): self
-    {
-        $this->telephone = $telephone;
-
-        return $this;
-    }
-
     public function getHeure(): ?\DateTimeInterface
     {
         return $this->heure;
