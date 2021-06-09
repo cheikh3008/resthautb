@@ -36,6 +36,7 @@ class ClientController extends AbstractController
         $user->setPassword($passwordEncode->encodePassword($user, $values->password))
                 ->setRole($role)
                 ->setUsername($values->username)
+                ->setAdresse(($values->adresse))
                 ->setNomComplet($values->nomComplet)
                 ->setTelephone($values->telephone);
         $manager->persist($user);

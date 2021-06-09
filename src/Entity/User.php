@@ -101,6 +101,11 @@ class User implements UserInterface
      */
     private $reservation;
 
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $adresse;
+
     public function __construct()
     {
         $this->resto = new ArrayCollection();
@@ -419,6 +424,18 @@ class User implements UserInterface
                 $reservation->setUser(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getAdresse(): ?string
+    {
+        return $this->adresse;
+    }
+
+    public function setAdresse(?string $adresse): self
+    {
+        $this->adresse = $adresse;
 
         return $this;
     }
