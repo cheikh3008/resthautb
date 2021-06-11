@@ -75,6 +75,7 @@ class Plat
 
     /**
      * @ORM\ManyToMany(targetEntity=Commande::class, inversedBy="plats")
+     * @Groups({"plat:read"})
      */
     private $commande;
 

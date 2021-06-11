@@ -30,7 +30,7 @@ class ReservationController extends AbstractController
     /**
      * @Route("/api/add/reservation", name="reservation")
      */
-    public function addReservationByClient(Request $request,  SerializerInterface $serializer ,TablesRepository $tablesRepository ,EntityManagerInterface $manager ,RoleRepository $roleRepository, RestoRepository $restoRepository): Response
+    public function addReservationByClient(Request $request, TablesRepository $tablesRepository ,EntityManagerInterface $manager ,RoleRepository $roleRepository, RestoRepository $restoRepository): Response
     {
         $values = json_decode($request->getContent());
         $reservation = new Reservation();
