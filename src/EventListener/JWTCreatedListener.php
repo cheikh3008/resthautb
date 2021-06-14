@@ -2,6 +2,7 @@
 
 namespace App\EventListener;
 
+use App\Repository\UserRepository;
 use App\Repository\RestoRepository;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Lexik\Bundle\JWTAuthenticationBundle\Event\JWTCreatedEvent;
@@ -13,13 +14,15 @@ class JWTCreatedListener
      */
     private $requestStack;
     private $restoRepository;
+    private $userRepository;
     /**
      * @param RequestStack $requestStack
      */
-    public function __construct(RequestStack $requestStack, RestoRepository $restoRepository)
+    public function __construct(RequestStack $requestStack, RestoRepository $restoRepository, UserRepository $userRepository)
     {
         $this->requestStack = $requestStack;
         $this->restoRepository = $restoRepository;
+        $this->userRepository = $userRepository;
     }
     /**
      * @param JWTCreatedEvent $event
@@ -40,6 +43,18 @@ class JWTCreatedListener
                     [
                         'nomResto' => $data["0"]->getNomResto(),
                         'image' => $data["0"]->getImage()
+                    ]
+            );
+            $event->setData($payload);
+        }
+        if($user->getRole()->getLibelle() == "ROLE_CLIENT"){
+            $data = $this->userRepository->find($user->getid());
+            $payload = array_merge(
+                $event->getData(),
+                    [
+                        'nomComplet' => $data->getNomComplet(),
+                        'telephone' => $data->getTelephone(),
+                        'adresse' => $data->getAdresse(),
                     ]
             );
             $event->setData($payload);

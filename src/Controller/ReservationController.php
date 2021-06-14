@@ -36,13 +36,28 @@ class ReservationController extends AbstractController
         $reservation = new Reservation();
         $user = $this->tokenStorage->getToken()->getUser(); 
         $table = $tablesRepository->findBy(["id" => $values->tables]);
-        // foreach ($table as  $value) {
-        //     # code...
-        //     $table = $serializer->deserialize($value, Tables::class, 'json');
-        // }
-        //dd($table);
+        $date = new  \DateTime();
+        $dataReserv = strtotime($values->createdAt);
+        $heureReserv =  strtotime($values->heure);
+        $dateJour = strtotime($date->format('Y-m-d'));
+        $heureJour = strtotime($date->format('H:i'));
+        if($heureReserv < $heureJour) {
+            $data = [
+                'status' => 500,
+                'message' => 'Impossible de reserver à une heure pasée . '
+            ] ;
+            return new JsonResponse($data, 500);
+        }
+        if($dataReserv < $dateJour) {
+            $data = [
+                'status' => 500,
+                'message' => 'Impossible de reserver à une date pasée . '
+            ] ;
+            return new JsonResponse($data, 500);
+        }
+
         $reservation->setCreatedAt(\DateTime::createFromFormat('Y-m-d', $values->createdAt))
-                    ->setHeure(\DateTime::createFromFormat('H:m', $values->heure))
+                    ->setHeure(\DateTime::createFromFormat('H:i', $values->heure))
                     ->setUser($user);
         foreach ($table as  $value) {
             $reservation->addTable($value);
@@ -65,13 +80,13 @@ class ReservationController extends AbstractController
         $resto = $restoRepository->findBy(["user" => $userConnecte]);
         $tables = $tablesRepository->findBy(["resto" => $resto["0"]]);
         
-        $new_array = [];
-        foreach($tables as $key => $value) {
-            $new_array[] = $value->getReservation();
-        }
+        // $new_array = [];
+        // foreach($tables as $key => $value) {
+        //     $new_array['reservation'] = $value->getReservation();
+        // }
         if($tables){
             
-            $dataTable = $serializer->serialize($new_array["0"], 'json');
+            $dataTable = $serializer->serialize($tables, 'json');
 
             return new Response($dataTable, 200, [
                 'Content-Type' => 'application/json'

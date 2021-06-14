@@ -39,6 +39,7 @@ class Commande
 
     /**
      * @ORM\Column(type="datetime")
+     * @Groups({"commande:read" , "plat:read"})
      */
     private $createdAt;
 
@@ -57,6 +58,7 @@ class Commande
 
     /**
      * @ORM\Column(type="boolean")
+     * @Groups({"commande:read" , "plat:read"})
      */
     private $isValid;
 

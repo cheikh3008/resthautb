@@ -27,7 +27,17 @@ class TablesRepository extends ServiceEntityRepository
             WHERE T.resto = R.id  AND R.id = '.$id
         )->getResult();
     }
-    
+    // public function getTables()
+    // {
+    //     return $this->createQueryBuilder('t')
+    //                 ->innerJoin('t.reservation', 'r')
+    //                 ->innerJoin('t.resto', 'res')
+    //                 ->where('r.id = t.id')
+    //                 ->andWhere('res.id = :resto_id')
+    //                 ->setParameter('resto_id', 28)
+    //                 ->getQuery()
+    //                 ->getResult();
+    // }
     // /**
     //  * @return Tables[] Returns an array of Tables objects
     //  */

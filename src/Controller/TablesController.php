@@ -33,8 +33,6 @@ class TablesController extends AbstractController
         $resto = $restoRepository->findBy(["user" => $userConnecte]);
         $tables = $tablesRepository->findBy(["resto" => $resto["0"]]);
         $dataTable = $serializer->serialize($tables, 'json');
-        // dd($tables);
-
         return new Response($dataTable, 200, [
             'Content-Type' => 'application/json'
         ]);
@@ -44,13 +42,8 @@ class TablesController extends AbstractController
      */
     public function list_tables_user_resto_id($id, TablesRepository $tablesRepository ,SerializerInterface $serializer, RestoRepository $restoRepository)
     {
-        
-        // $userConnecte = $this->tokenStorage->getToken()->getUser();
-        // $resto = $restoRepository->findBy(["user" => $userConnecte]);
         $tables = $tablesRepository->findTablesByResto($id);
         $dataTable = $serializer->serialize($tables, 'json');
-        // dd($tables);
-
         return new Response($dataTable, 200, [
             'Content-Type' => 'application/json'
         ]);

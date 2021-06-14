@@ -16,9 +16,12 @@ class MenuEventSubscriber implements EventSubscriberInterface
     public function onControllerEvent(ControllerEvent $event)
     {
         //dd($event->getRequest()->get('_controller'));
-        if ($event->getRequest()->getMethod() === "GET" 
+        // if ( $event->getRequest()->get('_controller')) {
+        //     dd($event->getRequest()->get('_route'));
+        // }
+        if ($event->getRequest()->getMethod() === "GET" &&
+            $event->getRequest()->get('_route') !== "etat_commande"
         ) {
-         
             $data = $this->menuRepository->findAll();
             foreach ($data as $value) {
                 $value->setImage((base64_encode(stream_get_contents($value->getImage()))));

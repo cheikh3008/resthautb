@@ -54,7 +54,7 @@ class Tables
     /**
      * @ORM\ManyToMany(targetEntity=Reservation::class, inversedBy="tables")
      * @JoinTable(name="tables_reservation")
-     * @Groups({"tables:read"})
+     * @Groups({"tables:read", "resto:read"})
      */
     private $reservation;
 
