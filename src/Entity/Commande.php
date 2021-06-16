@@ -45,29 +45,29 @@ class Commande
 
     
     /**
-     * @ORM\ManyToOne(targetEntity=User::class, inversedBy="commande")
-     * @Groups({"commande:read" , "plat:read"})
-     */
-    private $user;
-
-    /**
-     * @ORM\ManyToMany(targetEntity=Plat::class, mappedBy="commande")
-     * @Groups({"commande:read"})
-     */
-    private $plats;
-
-    /**
      * @ORM\Column(type="boolean")
      * @Groups({"commande:read" , "plat:read"})
      */
     private $isValid;
 
+    /**
+     * @ORM\OneToMany(targetEntity=PlatCommande::class, mappedBy="commande")
+     * * @Groups({"commande:read"})
+     */
+    private $platCommandes;
+
+    /**
+     * @ORM\ManyToOne(targetEntity=User::class, inversedBy="commande")
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $user;
+
     public function __construct()
     {
-        $this->plats = new ArrayCollection();
         $this->createdAt = new \DateTime('now');
         $this->updatedAt = new \DateTime('now');
         $this->isValid = false;
+        $this->platCommandes = new ArrayCollection();
     }
 
     
@@ -137,32 +137,7 @@ class Commande
         return $this;
     }
 
-    /**
-     * @return Collection|Plat[]
-     */
-    public function getPlats(): Collection
-    {
-        return $this->plats;
-    }
-
-    public function addPlat(Plat $plat): self
-    {
-        if (!$this->plats->contains($plat)) {
-            $this->plats[] = $plat;
-            $plat->addCommande($this);
-        }
-
-        return $this;
-    }
-
-    public function removePlat(Plat $plat): self
-    {
-        if ($this->plats->removeElement($plat)) {
-            $plat->removeCommande($this);
-        }
-
-        return $this;
-    }
+    
 
     public function getIsValid(): ?bool
     {
@@ -172,6 +147,36 @@ class Commande
     public function setIsValid(bool $isValid): self
     {
         $this->isValid = $isValid;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|PlatCommande[]
+     */
+    public function getPlatCommandes(): Collection
+    {
+        return $this->platCommandes;
+    }
+
+    public function addPlatCommande(PlatCommande $platCommande): self
+    {
+        if (!$this->platCommandes->contains($platCommande)) {
+            $this->platCommandes[] = $platCommande;
+            $platCommande->setCommande($this);
+        }
+
+        return $this;
+    }
+
+    public function removePlatCommande(PlatCommande $platCommande): self
+    {
+        if ($this->platCommandes->removeElement($platCommande)) {
+            // set the owning side to null (unless already changed)
+            if ($platCommande->getCommande() === $this) {
+                $platCommande->setCommande(null);
+            }
+        }
 
         return $this;
     }

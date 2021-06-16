@@ -74,11 +74,9 @@ class Plat
     private $menus;
 
     /**
-     * @ORM\ManyToMany(targetEntity=Commande::class, inversedBy="plats")
-     * @Groups({"plat:read"})
+     * @ORM\OneToMany(targetEntity=PlatCommande::class, mappedBy="plat")
      */
-    private $commande;
-
+    private $platCommandes;
    
 
     public function __construct()
@@ -86,6 +84,7 @@ class Plat
         $this->quantite = 1;
         $this->menus = new ArrayCollection();
         $this->commande = new ArrayCollection();
+        $this->platCommandes = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -183,25 +182,31 @@ class Plat
     }
 
     /**
-     * @return Collection|Commande[]
+     * @return Collection|PlatCommande[]
      */
-    public function getCommande(): Collection
+    public function getPlatCommandes(): Collection
     {
-        return $this->commande;
+        return $this->platCommandes;
     }
 
-    public function addCommande(Commande $commande): self
+    public function addPlatCommande(PlatCommande $platCommande): self
     {
-        if (!$this->commande->contains($commande)) {
-            $this->commande[] = $commande;
+        if (!$this->platCommandes->contains($platCommande)) {
+            $this->platCommandes[] = $platCommande;
+            $platCommande->setPlat($this);
         }
 
         return $this;
     }
 
-    public function removeCommande(Commande $commande): self
+    public function removePlatCommande(PlatCommande $platCommande): self
     {
-        $this->commande->removeElement($commande);
+        if ($this->platCommandes->removeElement($platCommande)) {
+            // set the owning side to null (unless already changed)
+            if ($platCommande->getPlat() === $this) {
+                $platCommande->setPlat(null);
+            }
+        }
 
         return $this;
     }

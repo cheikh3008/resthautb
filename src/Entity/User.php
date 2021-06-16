@@ -82,11 +82,6 @@ class User implements UserInterface
 
 
     /**
-     * @ORM\OneToMany(targetEntity=Commande::class, mappedBy="user")
-     */
-    private $commande;
-
-    /**
      * @ORM\OneToMany(targetEntity=Tables::class, mappedBy="user")
      */
     private $tables;
@@ -106,16 +101,21 @@ class User implements UserInterface
      */
     private $adresse;
 
+    /**
+     * @ORM\OneToMany(targetEntity=Commande::class, mappedBy="user", orphanRemoval=true)
+     */
+    private $commande;
+
     public function __construct()
     {
         $this->resto = new ArrayCollection();
         $this->plat = new ArrayCollection();
         $this->createdAt = new \DateTime("now");
         $this->updatedAt = new \DateTime("now");
-        $this->commande = new ArrayCollection();
         $this->tables = new ArrayCollection();
         $this->menu = new ArrayCollection();
         $this->reservation = new ArrayCollection();
+        $this->commande = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -306,38 +306,6 @@ class User implements UserInterface
     }
 
 
-    
-
-    /**
-     * @return Collection|Commande[]
-     */
-    public function getCommande(): Collection
-    {
-        return $this->commande;
-    }
-
-    public function addCommande(Commande $commande): self
-    {
-        if (!$this->commande->contains($commande)) {
-            $this->commande[] = $commande;
-            $commande->setUser($this);
-        }
-
-        return $this;
-    }
-
-    public function removeCommande(Commande $commande): self
-    {
-        if ($this->commande->removeElement($commande)) {
-            // set the owning side to null (unless already changed)
-            if ($commande->getUser() === $this) {
-                $commande->setUser(null);
-            }
-        }
-
-        return $this;
-    }
-
     /**
      * @return Collection|Tables[]
      */
@@ -436,6 +404,36 @@ class User implements UserInterface
     public function setAdresse(?string $adresse): self
     {
         $this->adresse = $adresse;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Commande[]
+     */
+    public function getCommande(): Collection
+    {
+        return $this->commande;
+    }
+
+    public function addCommande(Commande $commande): self
+    {
+        if (!$this->commande->contains($commande)) {
+            $this->commande[] = $commande;
+            $commande->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeCommande(Commande $commande): self
+    {
+        if ($this->commande->removeElement($commande)) {
+            // set the owning side to null (unless already changed)
+            if ($commande->getUser() === $this) {
+                $commande->setUser(null);
+            }
+        }
 
         return $this;
     }
