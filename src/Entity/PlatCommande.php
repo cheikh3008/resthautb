@@ -2,9 +2,10 @@
 
 namespace App\Entity;
 
-use ApiPlatform\Core\Annotation\ApiResource;
-use App\Repository\PlatCommandeRepository;
 use Doctrine\ORM\Mapping as ORM;
+use App\Repository\PlatCommandeRepository;
+use ApiPlatform\Core\Annotation\ApiResource;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
  * @ApiResource()
@@ -16,12 +17,14 @@ class PlatCommande
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
+     * @Groups({"plat:read"})
      */
     private $id;
 
     /**
      * @ORM\ManyToOne(targetEntity=Plat::class, inversedBy="platCommandes")
      * @ORM\JoinColumn(nullable=false)
+     * @Groups({"plat:read"})
      */
     private $plat;
 

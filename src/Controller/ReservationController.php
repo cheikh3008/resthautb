@@ -41,17 +41,28 @@ class ReservationController extends AbstractController
         $heureReserv =  strtotime($values->heure);
         $dateJour = strtotime($date->format('Y-m-d'));
         $heureJour = strtotime($date->format('H:i'));
-        if($heureReserv < $heureJour) {
+        // dd($heureReserv < $heureJour || $dataReserv < $dateJour);
+        if($dataReserv < $dateJour) {
+            $data = [
+                'status' => 500,
+                'message' => 'Impossible de reserver à une date pasée . '
+            ] ;
+            return new JsonResponse($data, 500);
+            
+        }
+        if($heureReserv < $heureJour ) {
             $data = [
                 'status' => 500,
                 'message' => 'Impossible de reserver à une heure pasée . '
             ] ;
             return new JsonResponse($data, 500);
         }
-        if($dataReserv < $dateJour) {
+        
+        
+        if( $values->tables === []) {
             $data = [
                 'status' => 500,
-                'message' => 'Impossible de reserver à une date pasée . '
+                'message' => 'Veuillez choisir au moins une table ou plusieurs table . '
             ] ;
             return new JsonResponse($data, 500);
         }

@@ -10,13 +10,22 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\Serializer\SerializerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 class ClientController extends AbstractController
 {
+    private $tokenStorage;
+
+    public function __construct(TokenStorageInterface $tokenStorage)
+    {
+        $this->tokenStorage = $tokenStorage;
+        
+    }
     /**
-     * @Route("/api/clients", name="client")
+     * @Route("/api/clients", name="add_client")
      */
     public function index(Request $request, UserRepository $userRepository ,EntityManagerInterface $manager,  UserPasswordEncoderInterface $passwordEncode, RoleRepository $roleRepository): Response
     {
@@ -48,5 +57,18 @@ class ClientController extends AbstractController
         ];
 
         return new JsonResponse($data, 201);
+    }
+
+    /**
+     * @Route("/api/client/profil", name="list_client")
+     */
+    public function listClient(SerializerInterface $serializer)
+    {
+        $user = $this->tokenStorage->getToken()->getUser(); 
+        $dataTable = $serializer->serialize($user, 'json');
+
+        return new Response($dataTable, 200, [
+            'Content-Type' => 'application/json'
+        ]);
     }
 }

@@ -75,6 +75,7 @@ class Plat
 
     /**
      * @ORM\OneToMany(targetEntity=PlatCommande::class, mappedBy="plat")
+     * @Groups({"plat:read"})
      */
     private $platCommandes;
    

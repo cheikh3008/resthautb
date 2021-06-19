@@ -76,7 +76,7 @@ class CommandeController extends AbstractController
         $menus = $menuRepository->findBy(["resto" => $resto["0"]]);
         $data = $platRepository->findBy(["user" => $userConnecte]);
         $new_array = [];
-        $dataTable = $serializer->serialize($commandeRepository->findAll() , 'json');
+        $dataTable = $serializer->serialize($data , 'json');
 
         return new Response($dataTable, 200, [
             'Content-Type' => 'application/json'
