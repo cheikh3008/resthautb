@@ -22,7 +22,10 @@ use Symfony\Component\Serializer\Annotation\Groups;
  *  "get" = {
  *          
  *  }
- * , "put", "delete"},
+ * , "put" = {
+ *  "normalization_context"={"groups"={"plat:edit"}},
+ * }, 
+ * "delete"},
  * normalizationContext={"groups"={"plat:read"}},
  *   
  * )
@@ -34,25 +37,25 @@ class Plat
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
-     * @Groups({"plat:read", "menu:read", "commande:read", "plat_commande:read" , "resto:read"})
+     * @Groups({"plat:read", "menu:read", "plat:edit", "commande:read", "plat_commande:read" , "resto:read"})
      */
     private $id;
 
     /**
      * @ORM\Column(type="string", length=255)
-     * @Groups({"plat:read", "menu:read", "commande:read", "plat_commande:read" })
+     * @Groups({"plat:read", "plat:edit" ,"menu:read", "commande:read", "plat_commande:read" })
      */
     private $nomPlat;
 
     /**
      * @ORM\Column(type="text")
-     * @Groups({"plat:read", "menu:read", "commande:read", "plat_commande:read" })
+     * @Groups({"plat:read", "plat:edit" ,"menu:read", "commande:read", "plat_commande:read" })
      */
     private $description;
 
     /**
      * @ORM\Column(type="float")
-     * @Groups({"plat:read", "menu:read", "commande:read", "plat_commande:read" })
+     * @Groups({"plat:read", "plat:edit" ,"menu:read", "commande:read", "plat_commande:read" })
      */
     private $prix;
 
@@ -70,6 +73,7 @@ class Plat
 
     /**
      * @ORM\ManyToMany(targetEntity=Menu::class, mappedBy="plat")
+     * @Groups({"plat:edit", "plat:read"})
      */
     private $menus;
 
@@ -160,7 +164,7 @@ class Plat
      */
     public function getMenus(): Collection
     {
-        return $this->menus;
+        return $this->menus ;
     }
 
     public function addMenu(Menu $menu): self

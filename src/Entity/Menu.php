@@ -11,6 +11,20 @@ use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
  * @ApiResource(
+ * collectionOperations={
+ *   "get" = {
+ *         
+ *  },
+ *      "post" = {}
+ * },
+ *     itemOperations={
+ *  "get" = {
+ *          
+ *  }
+ * , "put" = {
+ *  "normalization_context"={"groups"={"menu:edit"}},
+ * }, 
+ * "delete"},
  * normalizationContext={"groups"={"menu:read"}},
  *)
  * @ORM\Entity(repositoryClass=MenuRepository::class)
@@ -21,13 +35,13 @@ class Menu
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
-     * @Groups({"menu:read", "plat:read", "resto:read"})
+     * @Groups({"menu:read", "plat:read", "plat:edit" , "resto:read"})
      */
     private $id;
 
     /**
      * @ORM\Column(type="string", length=255)
-     * @Groups({"menu:read", "plat:read", "resto:read"})
+     * @Groups({"menu:read", "plat:read", "plat:edit" , "resto:read"})
      */
     private $categorie;
 
@@ -51,7 +65,7 @@ class Menu
 
     /**
      * @ORM\Column(type="blob")
-     * @Groups({"menu:read", "plat:read", "resto:read"})
+     * @Groups({"menu:read", "plat:read" ,"resto:read"})
      */
     private $image;
   
