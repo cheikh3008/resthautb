@@ -131,6 +131,20 @@ class CommandeController extends AbstractController
         }
         
     }
+    /**
+     * @Route("/api/list/commande/client", name="list_commande_client")
+     */
+    public function list_reserv_client(SerializerInterface $serializer, CommandeRepository $commandeRepository)
+    {
+        $userConnecte = $this->tokenStorage->getToken()->getUser();
+        $data = $commandeRepository->findBy(["user" => $userConnecte]);
+         
+        $dataTable = $serializer->serialize($data, 'json');
+
+        return new Response($dataTable, 200, [
+            'Content-Type' => 'application/json'
+        ]);
+    }
 }
 
         // $plats = $platRepository->findBy(["id" => $values->plat]);

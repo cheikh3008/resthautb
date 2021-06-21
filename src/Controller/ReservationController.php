@@ -112,4 +112,19 @@ class ReservationController extends AbstractController
         }
        
     }
+
+    /**
+     * @Route("/api/list/reservation/client", name="list_reserv_client")
+     */
+    public function list_reserv_client(SerializerInterface $serializer, ReservationRepository $reservationRepository)
+    {
+        $userConnecte = $this->tokenStorage->getToken()->getUser();
+        $data = $reservationRepository->findBy(["user" => $userConnecte]);
+         
+        $dataTable = $serializer->serialize($data, 'json');
+
+        return new Response($dataTable, 200, [
+            'Content-Type' => 'application/json'
+        ]);
+    }
 }

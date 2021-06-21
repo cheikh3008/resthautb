@@ -5,9 +5,7 @@ namespace App\Entity;
 use App\Repository\PasswordUpdateRepository;
 use Doctrine\ORM\Mapping as ORM;
 
-/**
- * @ORM\Entity(repositoryClass=PasswordUpdateRepository::class)
- */
+
 class PasswordUpdate
 {
     private $oldPassword;

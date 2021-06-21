@@ -71,4 +71,5 @@ class ClientController extends AbstractController
             'Content-Type' => 'application/json'
         ]);
     }
+    
 }

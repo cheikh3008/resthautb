@@ -55,10 +55,17 @@ class Reservation
      */
     private $tables;
 
+    /**
+     * @ORM\Column(type="boolean")
+     * @Groups({"reservation:read"})
+     */
+    private $isValid;
+
     public function __construct()
     {
         $this->updatedAt = new \DateTime("now");
         $this->tables = new ArrayCollection();
+        $this->isValid = false;
     }
 
     public function getId(): ?int
@@ -137,6 +144,18 @@ class Reservation
         if ($this->tables->removeElement($table)) {
             $table->removeReservation($this);
         }
+
+        return $this;
+    }
+
+    public function getIsValid(): ?bool
+    {
+        return $this->isValid;
+    }
+
+    public function setIsValid(bool $isValid): self
+    {
+        $this->isValid = $isValid;
 
         return $this;
     }

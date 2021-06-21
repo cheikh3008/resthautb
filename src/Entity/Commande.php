@@ -52,7 +52,7 @@ class Commande
 
     /**
      * @ORM\OneToMany(targetEntity=PlatCommande::class, mappedBy="commande")
-     * * @Groups({"commande:read"})
+     * @Groups({"commande:read"})
      */
     private $platCommandes;
 

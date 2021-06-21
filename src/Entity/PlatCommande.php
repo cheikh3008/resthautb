@@ -8,7 +8,9 @@ use ApiPlatform\Core\Annotation\ApiResource;
 use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
- * @ApiResource()
+ * @ApiResource(
+ * normalizationContext={"groups"={"plat_commande:read"}},
+ * )
  * @ORM\Entity(repositoryClass=PlatCommandeRepository::class)
  */
 class PlatCommande
@@ -17,14 +19,14 @@ class PlatCommande
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
-     * @Groups({"plat:read"})
+     * @Groups({"plat:read", "plat_commande:read"})
      */
     private $id;
 
     /**
      * @ORM\ManyToOne(targetEntity=Plat::class, inversedBy="platCommandes")
      * @ORM\JoinColumn(nullable=false)
-     * @Groups({"plat:read"})
+     * @Groups({"plat:read", "commande:read", "plat_commande:read"})
      */
     private $plat;
 
@@ -36,6 +38,7 @@ class PlatCommande
 
     /**
      * @ORM\Column(type="integer")
+     * @Groups({"plat:read", "commande:read", "plat_commande:read"})
      */
     private $quantite;
 

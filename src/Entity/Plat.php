@@ -34,25 +34,25 @@ class Plat
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
-     * @Groups({"plat:read", "menu:read", "commande:read" , "resto:read"})
+     * @Groups({"plat:read", "menu:read", "commande:read", "plat_commande:read" , "resto:read"})
      */
     private $id;
 
     /**
      * @ORM\Column(type="string", length=255)
-     * @Groups({"plat:read", "menu:read", "commande:read" })
+     * @Groups({"plat:read", "menu:read", "commande:read", "plat_commande:read" })
      */
     private $nomPlat;
 
     /**
      * @ORM\Column(type="text")
-     * @Groups({"plat:read", "menu:read", "commande:read" })
+     * @Groups({"plat:read", "menu:read", "commande:read", "plat_commande:read" })
      */
     private $description;
 
     /**
      * @ORM\Column(type="float")
-     * @Groups({"plat:read", "menu:read", "commande:read" })
+     * @Groups({"plat:read", "menu:read", "commande:read", "plat_commande:read" })
      */
     private $prix;
 
