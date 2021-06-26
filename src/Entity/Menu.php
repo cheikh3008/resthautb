@@ -65,7 +65,7 @@ class Menu
 
     /**
      * @ORM\Column(type="blob")
-     * @Groups({"menu:read", "plat:read" ,"resto:read"})
+     * @Groups({"menu:read" ,"resto:read"})
      */
     private $image;
   

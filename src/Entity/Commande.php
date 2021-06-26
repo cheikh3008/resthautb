@@ -43,7 +43,7 @@ class Commande
      */
     private $createdAt;
 
-    
+
     /**
      * @ORM\Column(type="boolean")
      * @Groups({"commande:read" , "plat:read"})
@@ -59,6 +59,7 @@ class Commande
     /**
      * @ORM\ManyToOne(targetEntity=User::class, inversedBy="commande")
      * @ORM\JoinColumn(nullable=false)
+     * @Groups({"commande:read"})
      */
     private $user;
 
@@ -70,7 +71,7 @@ class Commande
         $this->platCommandes = new ArrayCollection();
     }
 
-    
+
 
     public function getId(): ?int
     {
@@ -137,7 +138,7 @@ class Commande
         return $this;
     }
 
-    
+
 
     public function getIsValid(): ?bool
     {
@@ -180,6 +181,4 @@ class Commande
 
         return $this;
     }
-
-    
 }

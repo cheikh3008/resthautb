@@ -87,29 +87,64 @@ class ReservationController extends AbstractController
      */
     public function list(ReservationRepository $reservationRepository, TablesRepository $tablesRepository ,SerializerInterface $serializer, RestoRepository $restoRepository)
     {
+
         $userConnecte = $this->tokenStorage->getToken()->getUser();
-        $resto = $restoRepository->findBy(["user" => $userConnecte]);
-        $tables = $tablesRepository->findBy(["resto" => $resto["0"]]);
+        $resto = $restoRepository->findOneBy(["user" => $userConnecte]);
+        //dd($resto);
+        $data = $reservationRepository->findAll();
+        $dataReservations = [];
+        foreach ($data as $key => $reservation) {
+            foreach ($reservation->getTables() as $key => $value) {
+                if($value->getResto()->getId() === $resto->getId()) {
+                    $dataReservations [] = $reservation;
+                    // $dd = array_unique($res, SORT_REGULAR);
+                }
+            }
+
+        }
+        $resultats = [];
+        foreach (array_unique($dataReservations, SORT_REGULAR) as  $value) {
+            $resultats [] = $value;
+        }
+        return $this->json($resultats, 200);
+        //return new JsonResponse($res, 201);
+        // array_unique($res, SORT_REGULAR)
+        // $tab = [];
+        // $tab2 = [];
+        // foreach ($res as $key => $value) {
+        //     $tab2 [] =  [
+        //         "date" => $value->getCreatedAt(),
+        //         "heure" => $value->getHeure(),
+        //         //"user" => $value->getUser()
+        //     ];
+        //     foreach ($value->getTables() as $key => $table) {
+        //         $tab [] = $table;
+
+        //     }
+        //     $tab2 ["tables"] =  $tab;
+        // }
+        // dd($tab2);
+        // $tables = $tablesRepository->findBy(["resto" => $resto["0"]]);
         
         // $new_array = [];
         // foreach($tables as $key => $value) {
         //     $new_array['reservation'] = $value->getReservation();
         // }
-        if($tables){
+        // if($tables){
             
-            $dataTable = $serializer->serialize($tables, 'json');
+        //     $dataTable = $serializer->serialize($tables, 'json');
 
-            return new Response($dataTable, 200, [
-                'Content-Type' => 'application/json'
-            ]);
-        } else {
-            $data = [
+        //     return new Response($dataTable, 200, [
+        //         'Content-Type' => 'application/json'
+        //     ]);
+        // } else {
+        //     $data = [
 
-                'status' => 204,
-                'message' => 'Pas de reservation. '
-            ];
-            return new JsonResponse($data, 204);
-        }
+        //         'status' => 204,
+        //         'message' => 'Pas de reservation. '
+        //     ];
+        //     return new JsonResponse($data, 204);
+        // }
        
     }
 
@@ -126,5 +161,40 @@ class ReservationController extends AbstractController
         return new Response($dataTable, 200, [
             'Content-Type' => 'application/json'
         ]);
+    }
+
+    /**
+     * @Route("/api/reservation/etat/{id}", name="etat_reservation")
+     */
+    public function status($id, ReservationRepository $reservationRepository, EntityManagerInterface $manager)
+    {
+       
+        $reservation = $reservationRepository->find($id);
+        $status = '';
+        if ($reservation->getIsValid() === false)
+        {
+            $status = 'validé';
+            $reservation->setIsValid(true);
+            $manager->persist($reservation);
+            $manager->flush();
+            $data=[
+                'status'=>200,
+                'message'=> 'Votre reservation'.' a été '. $status
+            ];
+            return $this->json($data, 200);
+        }
+        else
+        {
+            $status = 'en cours ...';
+            $reservation->setIsValid(false);
+            $manager->persist($reservation);
+            $manager->flush();
+            $data=[
+                'status'=>200,
+                'message'=> 'Votre reservation'.' est '. $status
+            ];
+            return $this->json($data, 200);
+        }
+        
     }
 }

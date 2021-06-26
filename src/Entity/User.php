@@ -12,7 +12,23 @@ use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 /**
- * @ApiResource()
+ * @ApiResource(
+*  * collectionOperations={
+*   "get" = {
+*         
+*  },
+*      "post" = {}
+* },
+*     itemOperations={
+*  "get" = {
+*          
+*  }
+* , "put" = {
+*   "normalization_context"={"groups"={"user:edit"}},
+* }, 
+* "delete"},
+* normalizationContext={"groups"={"resto:read"}},
+ * )
  * @ORM\Entity(repositoryClass=UserRepository::class)
  * @ORM\Table(name="`user`")
  * @UniqueEntity("username" ,message="Cette username existe déja")
@@ -23,13 +39,13 @@ class User implements UserInterface
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
-     * @Groups({"resto:read", "reservation:read", "commande:read"})
+     * @Groups({"resto:read", "user:edit" ,"reservation:read", "commande:read"})
      */
     private $id;
 
     /**
      * @ORM\Column(type="string", length=180, unique=true)
-     * @Groups({"resto:read", "reservation:read", "commande:read"})
+     * @Groups({"resto:read", "user:edit" ,"reservation:read", "commande:read"})
      */
     private $username;
 
@@ -43,13 +59,13 @@ class User implements UserInterface
 
     /**
      * @ORM\Column(type="string", length=255)
-     * @Groups({"resto:read", "reservation:read", "commande:read"})
+     * @Groups({"resto:read", "user:edit" ,"reservation:read", "commande:read"})
      */
     private $nomComplet;
 
     /**
      * @ORM\Column(type="integer")
-     * @Groups({"resto:read", "reservation:read", "commande:read"})
+     * @Groups({"resto:read", "user:edit" ,"reservation:read", "commande:read"})
      */
     private $telephone;
 
@@ -98,6 +114,7 @@ class User implements UserInterface
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
+     * @Groups({"resto:read", "user:edit" ,"reservation:read", "commande:read"})
      */
     private $adresse;
 

@@ -15,10 +15,17 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Serializer\SerializerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 class RestoController extends AbstractController
 {
-    
+    private $tokenStorage;
+
+    public function __construct(TokenStorageInterface $tokenStorage)
+    {
+        $this->tokenStorage = $tokenStorage;
+        
+    }
     /**
      * @Route("/api/resto/add", name="add_resto", methods={"POST"})
      */
@@ -105,5 +112,51 @@ class RestoController extends AbstractController
             'Content-Type' => 'application/json'
         ]);
 
+    }
+
+    /**
+     * @Route("/api/resto/edit", name="edit_resto", methods={"PUT"})
+     */
+    public function editResto(
+        Request $request, 
+        UserRepository $userRepository,
+        EntityManagerInterface $manager,
+        RestoRepository $restoRepository
+        )
+    {
+        $values = json_decode($request->getContent());
+        $userConnecte = $this->tokenStorage->getToken()->getUser();
+        $user = $userRepository->find($userConnecte);
+        $resto = $restoRepository->findOneBy(["user" => $user]);
+        
+        if ($user instanceof User) {
+            foreach ($values as $key => $value){
+                if($key && !empty($value)) {
+                    $name = ucfirst($key);
+                    $setter = 'set'.$name;
+                    $user->$setter($value);
+                }
+            }
+        }
+        elseif ($resto instanceof Resto) {
+            foreach ($values as $key => $value){
+                if($key && !empty($value)) {
+                    $name = ucfirst($key);
+                    $setter = 'set'.$name;
+                    $resto->$setter($value);
+                }
+            }
+        }
+        
+        dd($resto);
+        $manager->flush();
+        $data = [
+
+            'status' => 201,
+            'message' => 'Votre user a été modifié avec succes. '
+        ];
+
+        return new JsonResponse($data, 201);
+        
     }
 }

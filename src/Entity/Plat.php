@@ -164,7 +164,7 @@ class Plat
      */
     public function getMenus(): Collection
     {
-        return $this->menus ;
+        return $this->menus;
     }
 
     public function addMenu(Menu $menu): self

@@ -72,15 +72,24 @@ class CommandeController extends AbstractController
     public function listCommande(CommandeRepository $commandeRepository ,RestoRepository $restoRepository, MenuRepository $menuRepository ,PlatRepository $platRepository, SerializerInterface $serializer)
     {
         $userConnecte = $this->tokenStorage->getToken()->getUser();
-        $resto = $restoRepository->findBy(["user" => $userConnecte]);
-        $menus = $menuRepository->findBy(["resto" => $resto["0"]]);
-        $data = $platRepository->findBy(["user" => $userConnecte]);
-        $new_array = [];
-        $dataTable = $serializer->serialize($data , 'json');
+        $resto = $restoRepository->findOneBy(["user" => $userConnecte]);
+        //dd($resto);
+        $data = $commandeRepository->findAll();
+        $dataCommandes = [];
+        foreach ($data as $key => $commandes) {
+            foreach ($commandes->getPlatCommandes() as $value) {
+                if($value->getPlat()->getUser()->getId() === $resto->getUser()->getId()) {
+                    $dataCommandes [] = $commandes;
+                }
+            }
 
-        return new Response($dataTable, 200, [
-            'Content-Type' => 'application/json'
-        ]);
+        }
+        $resultats = [];
+        foreach (array_unique($dataCommandes, SORT_REGULAR) as  $value) {
+            $resultats [] = $value;
+        }
+        return $this->json($resultats, 200);
+        
     }
 
     
