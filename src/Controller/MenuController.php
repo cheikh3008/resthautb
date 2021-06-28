@@ -61,6 +61,9 @@ class MenuController extends AbstractController
         // dd($userId);
         $data = $menuRepository->findBy(["resto" => $userId["0"]]);
         $dataTable = [];
+        foreach ($data as $key => $entity) {
+            $entity->setImage((base64_encode(stream_get_contents($entity->getImage()))));
+        }
         $dataTable = $serializer->serialize($data, 'json');
         return new Response($dataTable, 200, [
             'Content-Type' => 'application/json'
@@ -78,6 +81,9 @@ class MenuController extends AbstractController
         $resto = $restoRepository->find($id);
         $data = $menuRepository->findBy(["resto" => $resto]);
         $dataTable = [];
+        foreach ($data as $key => $entity) {
+            $entity->setImage((base64_encode(stream_get_contents($entity->getImage()))));
+        }
         $dataTable = $serializer->serialize($data, 'json');
         return new Response($dataTable, 200, [
             'Content-Type' => 'application/json'

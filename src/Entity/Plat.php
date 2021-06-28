@@ -73,7 +73,7 @@ class Plat
 
     /**
      * @ORM\ManyToMany(targetEntity=Menu::class, mappedBy="plat")
-     * @Groups({"plat:edit", "plat:read"})
+     * @Groups({"plat:edit"})
      */
     private $menus;
 

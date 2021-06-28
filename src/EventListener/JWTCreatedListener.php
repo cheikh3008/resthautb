@@ -35,14 +35,15 @@ class JWTCreatedListener
         $user = $event->getUser();
         if($user->getRole()->getLibelle() == "ROLE_GERANT"){
             
-            $data = $this->restoRepository->findBy(["user" => $user]);
-            $data["0"]->setImage((base64_encode(stream_get_contents($data["0"]->getImage()))));
+            $data = $this->restoRepository->findOneBy(["user" => $user]);
+            $data->setImage((base64_encode(stream_get_contents($data->getImage()))));
             
             $payload = array_merge(
                 $event->getData(),
                     [
-                        'nomResto' => $data["0"]->getNomResto(),
-                        'image' => $data["0"]->getImage()
+                        'idGerant' => $data->getId(),
+                        'nomResto' => $data->getNomResto(),
+                        'image' => $data->getImage()
                     ]
             );
             $event->setData($payload);

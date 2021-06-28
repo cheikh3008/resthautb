@@ -50,7 +50,7 @@ class ReservationController extends AbstractController
             return new JsonResponse($data, 500);
             
         }
-        if($heureReserv < $heureJour ) {
+        if($dataReserv <= $dateJour && $heureReserv < $heureJour ) {
             $data = [
                 'status' => 500,
                 'message' => 'Impossible de reserver à une heure pasée . '

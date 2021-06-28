@@ -129,18 +129,18 @@ class RestoController extends AbstractController
         $user = $userRepository->find($userConnecte);
         $resto = $restoRepository->findOneBy(["user" => $user]);
         
-        if ($user instanceof User) {
-            foreach ($values as $key => $value){
-                if($key && !empty($value)) {
+        foreach ($values as $key => $value){
+            if($key && !empty($value)) {
+                if (property_exists(User::class, $key)) {
                     $name = ucfirst($key);
                     $setter = 'set'.$name;
                     $user->$setter($value);
                 }
             }
         }
-        elseif ($resto instanceof Resto) {
-            foreach ($values as $key => $value){
-                if($key && !empty($value)) {
+        foreach ($values as $key => $value){
+            if($key && !empty($value)) {
+                if (property_exists(Resto::class, $key)) {
                     $name = ucfirst($key);
                     $setter = 'set'.$name;
                     $resto->$setter($value);
@@ -148,7 +148,6 @@ class RestoController extends AbstractController
             }
         }
         
-        dd($resto);
         $manager->flush();
         $data = [
 

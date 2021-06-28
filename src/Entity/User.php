@@ -39,7 +39,7 @@ class User implements UserInterface
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
-     * @Groups({"resto:read", "user:edit" ,"reservation:read", "commande:read"})
+     * @Groups({"resto:read", "resto:edit", "user:edit" ,"reservation:read", "commande:read"})
      */
     private $id;
 
@@ -59,13 +59,13 @@ class User implements UserInterface
 
     /**
      * @ORM\Column(type="string", length=255)
-     * @Groups({"resto:read", "user:edit" ,"reservation:read", "commande:read"})
+     * @Groups({"resto:read", "resto:edit" , "user:edit" ,"reservation:read", "commande:read"})
      */
     private $nomComplet;
 
     /**
      * @ORM\Column(type="integer")
-     * @Groups({"resto:read", "user:edit" ,"reservation:read", "commande:read"})
+     * @Groups({"resto:read", "resto:edit" , "user:edit" ,"reservation:read", "commande:read"})
      */
     private $telephone;
 
@@ -88,6 +88,7 @@ class User implements UserInterface
 
     /**
      * @ORM\OneToMany(targetEntity=Resto::class, mappedBy="user")
+     * @Groups({"resto:read", "user:edit"})
      */
     private $resto;
 
@@ -114,7 +115,7 @@ class User implements UserInterface
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
-     * @Groups({"resto:read", "user:edit" ,"reservation:read", "commande:read"})
+     * @Groups({"resto:read", "resto:edit" ,"user:edit" ,"reservation:read", "commande:read"})
      */
     private $adresse;
 

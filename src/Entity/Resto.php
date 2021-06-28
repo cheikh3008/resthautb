@@ -26,7 +26,9 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
  *      "get" = {
  *             
  *      },
- *      "put", 
+ *      "put"={
+ *      "normalization_context"={"groups"={"resto:edit"}},
+ * }, 
  *      "delete"},
  *      normalizationContext={"groups"={"resto:read"}},
  * )
@@ -39,32 +41,32 @@ class Resto
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
-     * @Groups({"resto:read"})
+     * @Groups({"resto:read", "user:edit", "resto:edit"})
      */
     private $id;
 
     /**
      * @ORM\Column(type="string", length=255)
-     * @Groups({"resto:read"})
+     * @Groups({"resto:read", "user:edit", "resto:edit"})
      * @Assert\NotBlank()
      */
     private $nomResto;
 
     /**
      * @ORM\Column(type="text")
-     * @Groups({"resto:read"})
+     * @Groups({"resto:read", "user:edit", "resto:edit"})
      */
     private $description;
 
     /**
      * @ORM\Column(type="string", length=255)
-     * @Groups({"resto:read"})
+     * @Groups({"resto:read", "user:edit", "resto:edit"})
      */
     private $adresse;
 
     /**
      * @ORM\ManyToOne(targetEntity=User::class, inversedBy="resto")
-     * @Groups({"resto:read"})
+     * @Groups({"resto:read", "resto:edit"})
     */
     private $user;
 
@@ -92,7 +94,6 @@ class Resto
 
     /**
      * @ORM\OneToMany(targetEntity=Menu::class, mappedBy="resto", orphanRemoval=true)
-     * @Groups({"resto:read"})
      */
     private $menu;
 
