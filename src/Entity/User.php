@@ -117,7 +117,7 @@ class User implements UserInterface
      * @ORM\Column(type="string", length=255, nullable=true)
      * @Groups({"resto:read", "resto:edit" ,"user:edit" ,"reservation:read", "commande:read"})
      */
-    private $adresse;
+    private $adresseDomicile;
 
     /**
      * @ORM\OneToMany(targetEntity=Commande::class, mappedBy="user", orphanRemoval=true)
@@ -414,14 +414,14 @@ class User implements UserInterface
         return $this;
     }
 
-    public function getAdresse(): ?string
+    public function getAdresseDomicile(): ?string
     {
-        return $this->adresse;
+        return $this->adresseDomicile;
     }
 
-    public function setAdresse(?string $adresse): self
+    public function setAdresseDomicile(?string $adresseDomicile): self
     {
-        $this->adresse = $adresse;
+        $this->adresseDomicile = $adresseDomicile;
 
         return $this;
     }

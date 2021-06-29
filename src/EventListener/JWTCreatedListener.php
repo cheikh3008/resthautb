@@ -55,7 +55,7 @@ class JWTCreatedListener
                     [
                         'nomComplet' => $data->getNomComplet(),
                         'telephone' => $data->getTelephone(),
-                        'adresse' => $data->getAdresse(),
+                        'adresse' => $data->getAdresseDomicile(),
                     ]
             );
             $event->setData($payload);
