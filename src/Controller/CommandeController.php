@@ -133,10 +133,10 @@ class CommandeController extends AbstractController
             $manager->persist($commande);
             $manager->flush();
             $data=[
-                'status'=>200,
+                'status'=>500,
                 'message'=> 'La commande n° '.$commande->getNumCommande().' est '. $status
             ];
-            return $this->json($data, 200);
+            return $this->json($data, 500);
         }
         
     }

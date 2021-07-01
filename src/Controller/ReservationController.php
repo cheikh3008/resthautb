@@ -190,10 +190,10 @@ class ReservationController extends AbstractController
             $manager->persist($reservation);
             $manager->flush();
             $data=[
-                'status'=>200,
+                'status'=>500,
                 'message'=> 'Votre reservation'.' est '. $status
             ];
-            return $this->json($data, 200);
+            return $this->json($data, 500);
         }
         
     }
