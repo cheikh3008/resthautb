@@ -158,4 +158,32 @@ class RestoController extends AbstractController
         return new JsonResponse($data, 201);
         
     }
+    /**
+     * @Route("/api/resto/image-edit", name="edit_image_resto", methods={"POST"})
+     */
+    public function editImageResto(
+        Request $request, 
+        UserRepository $userRepository,
+        EntityManagerInterface $manager,
+        RestoRepository $restoRepository
+        )
+    {
+        $userConnecte = $this->tokenStorage->getToken()->getUser();
+        $user = $userRepository->find($userConnecte);
+        $resto = $restoRepository->findOneBy(["user" => $user]);
+        $image = $request->files->get("image");
+        $image = fopen($image->getRealPath(),"rb");
+        $resto->setImage($image);
+        //dd($resto);
+        $manager->flush();
+        fclose($image);
+        $data = [
+
+            'status' => 201,
+            'message' => 'Votre profile a été modifié avec succes. '
+        ];
+
+        return new JsonResponse($data, 201);
+        
+    }
 }
