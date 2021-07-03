@@ -186,4 +186,19 @@ class RestoController extends AbstractController
         return new JsonResponse($data, 201);
         
     }
+
+    /**
+     * @Route("/api/resto/user", name="edit__resto_user_conected", methods={"GET"})
+     */
+    public function getRestoByUserConnected(
+        UserRepository $userRepository,
+        RestoRepository $restoRepository
+        )
+    {
+        $userConnecte = $this->tokenStorage->getToken()->getUser();
+        $user = $userRepository->find($userConnecte);
+        $resto = $restoRepository->findOneBy(["user" => $user]);
+        $resto->setImage((base64_encode(stream_get_contents($resto->getImage()))));
+        return $this->json($resto, 200);
+    }
 }
