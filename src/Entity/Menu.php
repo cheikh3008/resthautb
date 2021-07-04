@@ -35,13 +35,13 @@ class Menu
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
-     * @Groups({"menu:read", "plat:read", "plat:edit" , "resto:read"})
+     * @Groups({"menu:read", "menu:edit", "plat:read", "plat:edit" , "resto:read"})
      */
     private $id;
 
     /**
      * @ORM\Column(type="string", length=255)
-     * @Groups({"menu:read", "plat:read", "plat:edit" , "resto:read"})
+     * @Groups({"menu:read", "menu:edit", "plat:read", "plat:edit" , "resto:read"})
      */
     private $categorie;
 

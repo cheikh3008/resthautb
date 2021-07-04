@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\Menu;
 use App\Repository\MenuRepository;
 use App\Repository\PlatRepository;
+use App\Repository\UserRepository;
 use App\Repository\RestoRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -88,6 +89,37 @@ class MenuController extends AbstractController
         return new Response($dataTable, 200, [
             'Content-Type' => 'application/json'
         ]);
+        
+    }
+    /**
+     * @Route("/api/menu/{id}", name="edit_menu_resto", methods={"POST"})
+     */
+    public function editImageResto(
+        Request $request, 
+        UserRepository $userRepository,
+        EntityManagerInterface $manager,
+        MenuRepository $menuRepository,
+        $id
+        )
+    {
+        $userConnecte = $this->tokenStorage->getToken()->getUser();
+        $user = $userRepository->find($userConnecte);
+        $menu = $menuRepository->findOneBy(["user" => $user, "id" => $id]);
+        if(!empty($request->files->get("image"))){
+            $image = $request->files->get("image");
+            $image = fopen($image->getRealPath(),"rb");
+            $menu->setImage($image);
+            $manager->flush();
+            fclose($image);
+            
+        }
+        $data = [
 
+            'status' => 201,
+            'message' => 'Votre menu a été modifié avec succes. '
+        ];
+
+        return new JsonResponse($data, 201);
+        
     }
 }
