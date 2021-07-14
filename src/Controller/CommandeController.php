@@ -69,7 +69,7 @@ class CommandeController extends AbstractController
     /**
      * @Route("/api/commande/list", name="list_commande")
      */
-    public function listCommande(CommandeRepository $commandeRepository ,RestoRepository $restoRepository, MenuRepository $menuRepository ,PlatRepository $platRepository, SerializerInterface $serializer)
+    public function listCommande(CommandeRepository $commandeRepository, RestoRepository $restoRepository)
     {
         $userConnecte = $this->tokenStorage->getToken()->getUser();
         $resto = $restoRepository->findOneBy(["user" => $userConnecte]);

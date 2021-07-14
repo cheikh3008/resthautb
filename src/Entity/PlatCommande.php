@@ -31,7 +31,7 @@ class PlatCommande
     private $plat;
 
     /**
-     * @ORM\ManyToOne(targetEntity=Commande::class, inversedBy="platCommandes")
+     * @ORM\ManyToOne(targetEntity=Commande::class, inversedBy="platCommandes", cascade="remove")
      * @ORM\JoinColumn(nullable=false)
      */
     private $commande;

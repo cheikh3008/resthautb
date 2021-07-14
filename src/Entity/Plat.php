@@ -25,7 +25,9 @@ use Symfony\Component\Serializer\Annotation\Groups;
  * , "put" = {
  *  "normalization_context"={"groups"={"plat:edit"}},
  * }, 
- * "delete"},
+ * "delete" = {
+ *  "normalization_context"={"groups"={"plat:delete"}},
+ * }},
  * normalizationContext={"groups"={"plat:read"}},
  *   
  * )
@@ -37,25 +39,25 @@ class Plat
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
-     * @Groups({"plat:read", "menu:read", "plat:edit", "commande:read", "plat_commande:read" , "resto:read"})
+     * @Groups({"plat:read", "menu:read", "plat:edit", "plat:delete", "commande:read", "plat_commande:read" , "resto:read"})
      */
     private $id;
 
     /**
      * @ORM\Column(type="string", length=255)
-     * @Groups({"plat:read", "plat:edit" ,"menu:read", "commande:read", "plat_commande:read" })
+     * @Groups({"plat:read", "plat:edit", "plat:delete" ,"menu:read", "commande:read", "plat_commande:read" })
      */
     private $nomPlat;
 
     /**
      * @ORM\Column(type="text")
-     * @Groups({"plat:read", "plat:edit" ,"menu:read", "commande:read", "plat_commande:read" })
+     * @Groups({"plat:read", "plat:edit", "plat:delete" ,"menu:read", "commande:read", "plat_commande:read" })
      */
     private $description;
 
     /**
      * @ORM\Column(type="float")
-     * @Groups({"plat:read", "plat:edit" ,"menu:read", "commande:read", "plat_commande:read" })
+     * @Groups({"plat:read", "plat:edit", "plat:delete" ,"menu:read", "commande:read", "plat_commande:read" })
      */
     private $prix;
 
@@ -78,8 +80,8 @@ class Plat
     private $menus;
 
     /**
-     * @ORM\OneToMany(targetEntity=PlatCommande::class, mappedBy="plat")
-     * @Groups({"plat:read"})
+     * @ORM\OneToMany(targetEntity=PlatCommande::class, mappedBy="plat", cascade="remove")
+     * @Groups({"plat:read", "plat:delete"})
      */
     private $platCommandes;
    
