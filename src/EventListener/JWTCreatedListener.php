@@ -43,7 +43,8 @@ class JWTCreatedListener
                     [
                         'idGerant' => $data->getId(),
                         'nomResto' => $data->getNomResto(),
-                        'image' => $data->getImage()
+                        'image' => $data->getImage(),
+                        'nomComplet' => $user->getNomComplet()
                     ]
             );
             $event->setData($payload);
