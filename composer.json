@@ -31,7 +31,8 @@
         "symfony/serializer": "5.1.*",
         "symfony/twig-bundle": "5.1.*",
         "symfony/validator": "5.1.*",
-        "symfony/yaml": "5.1.*"
+        "symfony/yaml": "5.1.*",
+        "symfony/maker-bundle": "^1.30"
     },
     "config": {
         "optimize-autoloader": true,
@@ -84,6 +85,6 @@
         }
     },
     "require-dev": {
-        "symfony/maker-bundle": "^1.30"
+        
     }
 }
