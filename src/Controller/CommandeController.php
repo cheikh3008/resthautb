@@ -82,7 +82,6 @@ class CommandeController extends AbstractController
                     $dataCommandes [] = $commandes;
                 }
             }
-
         }
         $resultats = [];
         foreach (array_unique($dataCommandes, SORT_REGULAR) as  $value) {

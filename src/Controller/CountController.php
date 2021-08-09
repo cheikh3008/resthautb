@@ -29,10 +29,9 @@ class CountController extends AbstractController
         CommandeRepository $commandeRepository,
         ReservationRepository $reservationRepository,
         TablesRepository $tablesRepository, 
-        RestoRepository $restoRepository,
-        CommandeController $commandeController
+        RestoRepository $restoRepository
         ): Response
-    {
+        {
         $userConnecte = $this->tokenStorage->getToken()->getUser();
         $resto = $restoRepository->findOneBy(["user" => $userConnecte]);
         $menu = $menuRepository->findby(["user" => $userConnecte]);
