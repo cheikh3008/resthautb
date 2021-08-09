@@ -73,8 +73,8 @@
             "@auto-scripts"
         ],
         "compile": [
-            "symfony console doctrine:schema:update --force",
-            "symfony console doctrine:fixtures:load --append"
+            "php bin/console doctrine:schema:update --force",
+            "php bin/console doctrine:fixtures:load --append"
         ]
     },
     "conflict": {
