@@ -52,7 +52,7 @@ class Tables
     private $resto;
 
     /**
-     * @ORM\ManyToMany(targetEntity=Reservation::class, inversedBy="tables")
+     * @ORM\ManyToMany(targetEntity=Reservation::class, inversedBy="tables", cascade="remove")
      * @JoinTable(name="tables_reservation")
      * @Groups({"tables:read", "resto:read"})
      */
