@@ -43,9 +43,10 @@ class AppFixtures extends Fixture
             ->setPassword($this->encoder->encodePassword($user, "admin123"))
             ->setNomComplet("Bee Digital")
             ->setTelephone("773043248")
-            ->setUpdatedAt(new \DateTime())
+            ->setUpdatedAt(new \DateTime('now'))
             ->setCreatedAt(new \DAteTime());
         $manager->persist($user);
         $manager->flush();
+        // comments
     }
 }
